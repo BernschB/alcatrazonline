@@ -1,6 +1,19 @@
 #summary Architektur des Gesamtsystems (Big Picture)
 #labels Phase-Design
 
+= Ablauf (grob) =
+# Ein Client beschließt ein Spiel zu starten, kontaktiert dazu irgendwoher??? einen Registry Server und teilt ihm mit dass er ein neues Spiel erzeugt haben möchte
+# Der angesprochene Registryserver synchronisert sich über GroupCommunication mit allen anderen Registry Servern. Alle Server sind nun über das neue Spiel sowie dessen Spielleiter informiert
+# Andere Clients, die an einem neuen Spiel teilnehmen wollen holen sich von irgendeinem Registry Server eine Liste aller noch offenen Spiel-Partien
+# ACHTUNG: Alle Clients müssen idealerweise nun auch mit den Registryservern mitsynchronisiert werden, sodaß der Benutzer jederzeit mitverfolgen kann ob und wie eine Spielpartie mit Spielern besetzt ist oder evtl. auch schon voll ist (der einfachheit halber synchronisation über Polling jede xte Sekunde vom Client aus?)
+# Der Client registriert sich nun für eine Partie an der er teilnehmen möchte
+# Hat eine Partie die geforderte Spieleranzahl erreicht wird der Spielleiter darüber informiert und das Spiel kann durch ihn gestartet werden (Zusatzfunktionen: Spieler rauskicken, Messaging, Spieler sperren???)
+# Der Client startet das Spiel
+# Der/Die Server übergeben dem Spielleiter alle notwendigen Informationen seiner Spielpartner (ab jetzt rennt die Kommunikation nur mehr zwischen den Clients, die Server wissen nichts mehr über das laufende Spiel), Client Group Communication???
+# Verliert ein Client eine Netzwerkverbindung versucht er den Spielleiter zu kontaktieren um die Verbindung wieder aufzubauen (Timeout? Versuche?)
+# Bemerkt der Spielleiter das ein Spieler die Verbindung verloren hat wartet er sobald dieser Spieler am Zug ist eine gewisse Zeitspanne ab, bevor das Spiel ohne den Spieler fortgesetzt wird.
+# Verliert der Spielleiter die Verbindung versucht er (möglichst nach dem gleichen Protokoll) wieder alle Spieler zu kontaktieren, nach Timeout wird das Spiel aber abgebrochen.
+
 = Ideen, Rahmenbedingungen und verwendbare Technologien =
  * Spread als Group-Communication Framework (ist gefordert)
  * Java RMI bietet mit der rmiregistry einen Naming Dienst. Ein Name-Lookup ist allerdings Host gebunden (d.h. man muss den Hostnamen auf dem rmiregistry läuft kennen --> Single-Point-of-Failure?)
