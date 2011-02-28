@@ -1,0 +1,16 @@
+#summary Aufgabenstellung bis 9.3.2011
+
+Bis zur ersten Übung bereiten Sie bitte das Design für Ihre Gruppe vor, um es in der Übungseinheit präsentieren und diskutieren zu können. Für Präsenation und Diskussion stehen insgesamt ca. 30 Minuten pro Gruppe zur Verfügung. Damit sollte eine Gruppen-Präsentation insgesamt nicht länger als 20 bis max. 25 Minuten dauern.
+
+Konkret soll das Design bzw. die Präsentation folgende Punkte beinhalten:
+
+   # [ArchitekturDesGesamtsystems Architektur des Gesamtsystems].
+   # Spezifikation des Ablaufs zwischen Client und Registrierungsserver zum Starten des Spiels.
+   # Spezifikation des Ablaufs zwischen Client und Client zum Austausch der Züge.
+   # Spezifikation der Mechanismen um Serverausfälle tolerieren zu können.
+   # Remote Interface-Definition des Registrierungsservers (inkl. typisierten Methodenparametern).
+   # Remote Interface-Definition des Game Clients (inkl. typisierten Methodenparametern).
+
+Abgabe: Abzugeben ist vor dem Präsenztermin eine kurze Ausarbeitung (PDF, DOC, PPT) mit der Beschreibung des Designs für Ihre Gruppe als eine ZIP Datei per E-Mail an den jeweiligen Lektor. Die Datei soll dabei nach folgendem Schema benannt sein: Gruppenkürzel_NachnameGruppensprecher_Alcatraz_Teil1.ext, also z.B. A5_Maier_Alcatraz_Teil1.zip Es ist ausreichend, die bei der Präsentation verwendete Powerpoint-Präsentation abzugeben, sofern diese alle geforderten Elemente enthält.
+
+Weiters geben Sie bitte spätestens zum Zeitpunkt Ihrer Präsentation die von Ihrer Gruppe verwendete Technologie bekannt.
