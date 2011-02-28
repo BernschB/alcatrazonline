@@ -3,8 +3,8 @@
 
 Fertige Implementierung und Vorführung in der Übung. Abgabegespräch mit Prüfungscharakter:
 
-   1. Präsentation des Projekt-Designs.
-   2. Vorführung der Implementierung.
-   3. Erklärung spezifischer Mechanismen und Codeteile.
+   # Präsentation des Projekt-Designs.
+   # Vorführung der Implementierung.
+   # Erklärung spezifischer Mechanismen und Codeteile.
 
 Abgabe: Schicken Sie Ihre Abgabe bitte vor dem Präsenztermin als eine ZIP Datei per E-Mail an den jeweiligen Lektor. Die Datei soll dabei nach folgendem Schema benannt sein: Gruppenkürzel_NachnameGruppensprecher_Alcatraz_Final.zip, also z.B. A5_Maier_Alcatraz_Final.zip
