@@ -19,4 +19,4 @@
  * Java RMI bietet mit der rmiregistry einen Naming Dienst. Ein Name-Lookup ist allerdings Host gebunden (d.h. man muss den Hostnamen auf dem rmiregistry läuft kennen --> Single-Point-of-Failure?)
  * RMI and JNDI binden bringt eventuell mehr Location Transparency? - http://download.oracle.com/javase/1.5.0/docs/guide/jndi/jndi-rmi.html
  * Clustering mit JBoss als Middleware - http://docs.jboss.org/jbossas/jboss4guide/r4/html/cluster.chapt.html
- * The Three Rings Project - [http://code.google.com/p/narya/ Narya] [http://code.google.com/p/vilya/ Vilya] 
+ * The Three Rings Project - [http://code.google.com/p/narya/ Narya], [http://code.google.com/p/vilya/ Vilya] 
