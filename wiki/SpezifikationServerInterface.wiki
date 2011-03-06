@@ -2,7 +2,7 @@
 
 = Beschreibung =
 
-<img src="http://code.google.com/p/alcatrazonline/source/browse/trunk/Requirements/IRegistryServer.png" />
+<img src="http://alcatrazonline.googlecode.com/files/IRegistryServer.png" />
 
 
 = Interface Definition =
