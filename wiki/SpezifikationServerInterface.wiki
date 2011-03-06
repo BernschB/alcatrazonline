@@ -1,0 +1,18 @@
+#summary Interface Beschreibung des Registrierungsservers
+
+= Beschreibung =
+
+Add your content here.
+
+
+= Interface Definition =
+{{{
+interface IRegistryServer {
+  List<Game> listGames();
+  Player createPlayer(string Name);
+  Game createGame(Player player);
+  void joinGame(Game game) throws CannotJoinGameException;
+  void leaveGame(Game game) throws NotParticipatingException;
+  void startGame(Game game) throws StartingGameException;
+}
+}}}
