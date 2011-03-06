@@ -9,6 +9,7 @@ Definiert das Interface des Registrierungsservers. Der Registrierungsserver leis
  * Möglichkeiten für andere _Player_ an einem Spiel teilzunehmen (joinGame()) bzw. sich evtl. auch wieder von einem Spiel abzumelden (leaveGame())
  * Möglichkeit ein Spiel zu starten (startGame())
 
+= UML =
 http://alcatrazonline.googlecode.com/files/IRegistryServer.png
 
 
