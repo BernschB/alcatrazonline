@@ -1,0 +1,3 @@
+grant codeBase "file:/f:/rmi/" {
+    permission java.security.AllPermission;
+};
