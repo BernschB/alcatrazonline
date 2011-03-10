@@ -1,0 +1,30 @@
+#summary Hier wird die Aufteilung des Projekts in einzelne Pakete beschrieben
+#labels Phase-Design
+
+= Aufteilung in Pakete =
+
+Als Client-Server Anwendung können einmal drei grundsätzliche Pakete festgemacht werden:
+  * *Client* - Code der nur von den Clients verwendet wird
+  * *Server* - Code der nur von den Server verwendet wird 
+  * *Commons* - Code der von beiden verwendet wird.
+
+Die drei Hauptpakete befinden sich im Package:
+*at.technikum.sam.remote.alcatraz*
+
+== Details ==
+
+Um die Arbeit aufzuteilen werden die Paket weiter zerlegt in folgende Pakte und Klassen:
+
+  * *Client*
+   * ClientPaket 1
+   * _etc..._
+
+
+  * *Server*
+   * ServerPaket 1
+   * _etc..._
+ 
+
+  * *Commons*
+   * CommonsPaket 1
+   * _etc..._
