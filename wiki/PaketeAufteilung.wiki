@@ -16,8 +16,8 @@ Die drei Hauptpakete befinden sich im Package:
 Um die Arbeit aufzuteilen werden die Paket weiter zerlegt in folgende Pakte und Klassen:
 
  * *Commons*
-   * _[[DONE]]_ Projekt Setup 
-   * _[[DONE]]_ Interfaces
+   * _#DONE#_ Projekt Setup 
+   * _#DONE#_ Interfaces
    * PlayerAdapter Klasse
    * GameManagement Klasse (intern für Serverdatenaustausch notwendig?)
    * Utility Klasse Grundgerüst (evtl. Logging für Debugging Zwecke)
