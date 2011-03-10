@@ -15,16 +15,34 @@ Die drei Hauptpakete befinden sich im Package:
 
 Um die Arbeit aufzuteilen werden die Paket weiter zerlegt in folgende Pakte und Klassen:
 
+ * *Commons*
+   * _[DONE]_ Projekt Setup 
+   * _[DONE]_ Interfaces
+   * PlayerAdapter Klasse
+   * GameManagement Klasse (intern für Serverdatenaustausch notwendig?)
+   * Utility Klasse Grundgerüst (evtl. Logging für Debugging Zwecke)
+   * Ressources, Strings, Statics
+   
+
   * *Client*
-   * Client-Paket 1
-   * _etc..._
+   * ClientImpl Grundgerüst (RMI Managment, Startup, Shutdown, Main)
+   * Client Methode reportNewMaster(...)
+   * Client Methode isAlive()
+   * Client Methode startGame(...)
+   * Client Methode youtTurn()
+   * Client Methode doMove(...)
+   * Integration Client-Server Registrierungsablauf (abhängig von ServerImpl)
 
 
   * *Server*
-   * Server-Paket 1
-   * _etc..._
+   * ServerImpl Grundgerüst (RMI, Spread, Startup, Shutdown, GroupJoin, etc...)
+   * Server Methode createPlayer(...)
+   * Server Methode register(...)
+   * Server Methode forceStart()
+   * IAdvancedListener Implementierung
+    * Server Synchronisation
+    * Master Failure Detection & ELection
+    * Join/Leave Group
  
 
-  * *Commons*
-   * Commons-Paket 1
-   * _etc..._
+ 
