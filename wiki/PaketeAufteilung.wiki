@@ -35,7 +35,7 @@ Um die Arbeit aufzuteilen werden die Paket weiter zerlegt in folgende Pakte und 
 
 
   * *Server*
-   * ServerImpl Grundgerüst (RMI, Spread, Startup, Shutdown, GroupJoin, etc...)
+   * _#Jürgen#_ ServerImpl Grundgerüst (RMI, Spread, Startup, Shutdown, GroupJoin, etc...)
    * Server Methode createPlayer(...)
    * Server Methode register(...)
    * Server Methode forceStart()
