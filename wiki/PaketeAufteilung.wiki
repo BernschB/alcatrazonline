@@ -16,15 +16,15 @@ Die drei Hauptpakete befinden sich im Package:
 Um die Arbeit aufzuteilen werden die Paket weiter zerlegt in folgende Pakte und Klassen:
 
   * *Client*
-   * ClientPaket 1
+   * Client-Paket 1
    * _etc..._
 
 
   * *Server*
-   * ServerPaket 1
+   * Server-Paket 1
    * _etc..._
  
 
   * *Commons*
-   * CommonsPaket 1
+   * Commons-Paket 1
    * _etc..._
