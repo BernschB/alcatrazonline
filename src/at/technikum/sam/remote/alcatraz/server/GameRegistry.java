@@ -42,9 +42,11 @@ public class GameRegistry implements Serializable {
      * processed on a server at a time, which is in fact a singleton pattern.
      */
     private GameRegistry() {
-        /* Init Vector with size of MAXPLAYERS,
-         * so that no resizing has to be performed */
-        players = new Vector(MAXPLAYERS);
+        /*
+         * Init Vector with size of MAXPLAYERS,
+         * so that no resizing has to be performed.
+         */
+        players = new Vector<PlayerAdapter>(MAXPLAYERS);
     }
 
     /**

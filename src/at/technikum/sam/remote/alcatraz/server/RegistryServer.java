@@ -39,7 +39,7 @@ public class RegistryServer implements AdvancedMessageListener {
     private SpreadConnection connection;
     private SpreadGroup group;
 
-    public static void main (String args[]) {
+    public static void main (String[] args) {
         new RegistryServer();
     }
 
