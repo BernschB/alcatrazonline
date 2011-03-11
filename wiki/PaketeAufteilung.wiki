@@ -35,7 +35,7 @@ Um die Arbeit aufzuteilen werden die Paket weiter zerlegt in folgende Pakte und 
 
   * *Server*
    * _#Jürgen#_ ServerImpl Grundgerüst (RMI, Spread, Startup, Shutdown, GroupJoin, etc...)
-   * _#Jürgen#_ GameManagement Klasse (um den Server-State in eine Spread Message verpacken zu können)
+   * _#Jürgen#_ RegistryState Klasse (um den Server-State in eine Spread Message verpacken zu können)
    * Server Methode createPlayer(...)
    * Server Methode register(...)
    * Server Methode forceStart()
