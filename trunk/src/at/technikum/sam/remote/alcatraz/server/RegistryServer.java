@@ -1,8 +1,22 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
-
+/**
+ * FH Technikum-Wien,
+ * BICSS - Sommersemester 2011
+ *
+ * Softwarearchitekturen und Middlewaretechnologien
+ * Alcatraz - Remote - Projekt
+ * Gruppe B2
+ *
+ *
+ * @author Christian Fossati
+ * @author Stefan Schramek
+ * @author Michael Strobl
+ * @author Sebastian Vogel
+ * @author Juergen Zornig
+ *
+ *
+ * @date 2011/03/10
+ *
+ **/
 package at.technikum.sam.remote.alcatraz.server;
 
 import java.net.InetAddress;
@@ -16,7 +30,7 @@ import spread.SpreadMessage;
 
 /**
  *
- * @author pinkerl
+ * TODO: comment
  */
 public class RegistryServer implements AdvancedMessageListener {
 
@@ -67,10 +81,22 @@ public class RegistryServer implements AdvancedMessageListener {
 
     public void regularMessageReceived(SpreadMessage sm) {
         throw new UnsupportedOperationException("Not supported yet.");
+
+        /**
+         * TODO: Implement Server state synchronisation here
+         */
     }
 
     public void membershipMessageReceived(SpreadMessage sm) {
         throw new UnsupportedOperationException("Not supported yet.");
+
+        /**
+         * TODO: Implement group join/leave here
+         */
+
+        /**
+         * TODO: Implement master server failover here
+         */
     }
 
 }

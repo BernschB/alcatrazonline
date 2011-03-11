@@ -26,4 +26,7 @@ package at.technikum.sam.remote.alcatraz.commons;
  */
 public class NameAlreadyInUseException extends Exception {
 
+    public NameAlreadyInUseException() {
+        super();
+    }
 }

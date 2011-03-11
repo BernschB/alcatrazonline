@@ -26,4 +26,11 @@ package at.technikum.sam.remote.alcatraz.commons;
  */
 public class GameRegistryException extends Exception {
 
+    public GameRegistryException(String message) {
+        super();
+
+        /**
+         * TODO: Fill Message in Exception 
+         */
+    }
 }
