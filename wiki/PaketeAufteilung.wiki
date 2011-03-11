@@ -18,8 +18,8 @@ Um die Arbeit aufzuteilen werden die Paket weiter zerlegt in folgende Pakte und 
  * *Commons*
    * _#DONE#_ Projekt Setup 
    * _#DONE#_ Interfaces
-   * PlayerAdapter Klasse
-   * GameManagement Klasse (intern für Serverdatenaustausch notwendig?)
+   * _#DONE#_ PlayerAdapter Klasse
+   * GameManagement Klasse (um den Server-State in eine Spread Message verpacken zu können)
    * Utility Klasse Grundgerüst (evtl. Logging für Debugging Zwecke)
    * Ressources, Strings, Statics
    
