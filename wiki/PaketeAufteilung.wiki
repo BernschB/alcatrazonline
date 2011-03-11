@@ -39,7 +39,7 @@ Um die Arbeit aufzuteilen werden die Paket weiter zerlegt in folgende Pakte und 
    * Server Methode createPlayer(...)
    * Server Methode register(...)
    * Server Methode forceStart()
-   * IAdvancedListener Implementierung
+   * _#Christian#_ IAdvancedListener Implementierung
     * Server Synchronisation
     * Master Failure Detection & ELection
     * Join/Leave Group
