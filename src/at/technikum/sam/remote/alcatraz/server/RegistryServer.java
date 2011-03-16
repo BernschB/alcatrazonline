@@ -92,6 +92,8 @@ public class RegistryServer implements AdvancedMessageListener {
     public void membershipMessageReceived(SpreadMessage sm) {
         throw new UnsupportedOperationException("Not supported yet.");
 
+        /* comment */
+        
         /**
          * TODO: Implement group join/leave here
          */
