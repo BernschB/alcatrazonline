@@ -25,40 +25,27 @@ import at.technikum.sam.remote.alcatraz.commons.PlayerAdapter;
 import java.io.Serializable;
 import java.util.Vector;
 
+/* TODO: check if synchronizing Singletons is possible ???
+        Answer: No, its at least not recommended */
 /**
  * Helper class for managing player lists and number of players and synchronize
  * them over spread.
  */
-public class GameRegistry implements Serializable {
+public class Game implements Serializable {
 
     private final static int MAXPLAYERS = 4;
-
-    private static GameRegistry state = null;
-
     private Vector<PlayerAdapter> players;
 
     /**
      * Constructor of GameRegistry is private due to only one game is
      * processed on a server at a time, which is in fact a singleton pattern.
      */
-    private GameRegistry() {
+    public Game() {
         /*
          * Init Vector with size of MAXPLAYERS,
          * so that no resizing has to be performed.
          */
         players = new Vector<PlayerAdapter>(MAXPLAYERS);
-    }
-
-    /**
-     * Singleton Instance getter for GameRegistry
-     *
-     * @return The one and only instance of GameRegistry
-     */
-    public static GameRegistry getState() {
-        if(state == null)
-            state = new GameRegistry();
-
-        return state;
     }
 
     /**
