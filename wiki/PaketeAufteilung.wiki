@@ -37,8 +37,8 @@ Um die Arbeit aufzuteilen werden die Paket weiter zerlegt in folgende Pakte und 
    * _#Jürgen#_ ServerImpl Grundgerüst (RMI, Spread, Startup, etc...)
    * _#DONE#_ RegistryState Klasse (um den Server-State in eine Spread Message verpacken zu können)
    * Spread Group Opening?
-   * _#Jürgen#_ Server Methode createPlayer(...)
-   * _#Jürgen#_ Server Methode register(...)
+   * _#DONE#_ Server Methode createPlayer(...)
+   * _#DONE#_ Server Methode register(...) & unregister(...)
    * Server Methode forceStart()
    * _#Christian#_ IAdvancedListener Implementierung
     * Server Synchronisation
