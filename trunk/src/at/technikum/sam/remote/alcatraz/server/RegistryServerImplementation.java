@@ -97,18 +97,52 @@ public class RegistryServerImplementation extends UnicastRemoteObject
         }
     }
 
-    public void register(PlayerAdapter player) throws GameRegistryException, RemoteException {
-        throw new UnsupportedOperationException("Not supported yet.");
+    /**
+     * Adds a given player to the current game.
+     *
+     * @param player a PlayerAdapter object identifying a player and its client
+     *
+     * @throws GameRegistryException when something went wrong while registration TODO
+     * @throws RemoteException when ??? uhm...yeah when actually ??? TODO
+     */
+    public void register(PlayerAdapter player)
+            throws GameRegistryException, RemoteException {
+        try {
+            currentGame.addPlayer(player);
+        } catch (NameAlreadyInUseException ex) {
+
+            Logger.getLogger(RegistryServerImplementation.class.getName())
+                    .log(Level.SEVERE, null, ex);
+
+            throw new GameRegistryException(
+                    String.format(EX_MSG_GAME_REGISTRY_FAILED,
+                        player.getName()));
+        }
     }
 
-    public void unregister(PlayerAdapter player) throws GameRegistryException, RemoteException {
-        throw new UnsupportedOperationException("Not supported yet.");
+    /**
+     * Removes a given player from the current game
+     *
+     * @param player a PlayerAdapter object identifying a player and its client
+     * @throws GameRegistryException when ??? uhm...yeah when actually ??? TODO
+     * @throws RemoteException when ??? uhm...yeah when actually ??? TODO
+     */
+    public void unregister(PlayerAdapter player)
+            throws GameRegistryException, RemoteException {
+        currentGame.removePlayer(player);
     }
 
     public void forceStart(PlayerAdapter player) throws GameStartException, RemoteException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
+    /**
+     * Looks up, if a players nickname is in use already
+     * TODO: synchronization issues??? race conditions?
+     *
+     * @param name the nickname that should be checked
+     * @return true if its in use, false if not
+     */
     private static boolean nameInUse(String name) {
         Vector<PlayerAdapter> v = currentGame.getPlayers();
         PlayerAdapter pa = null;
