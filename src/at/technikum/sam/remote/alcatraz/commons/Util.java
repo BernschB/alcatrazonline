@@ -23,9 +23,13 @@ package at.technikum.sam.remote.alcatraz.commons;
 /**
 * Used for generally purpose utility-methods
 */
-public final class Util {
+public final class Util implements Constants {
 
     private final static boolean DEBUG = true;
+
+
+    private static int playerSequencer = -1;
+
     private Util() {
 
     }
@@ -39,5 +43,11 @@ public final class Util {
         if(DEBUG) {
             System.out.println(message);
         }
+    }
+
+    public static int getNewPlayerId() {
+        playerSequencer++;
+
+        return (playerSequencer - 1) % MAXPLAYERS;
     }
 }
