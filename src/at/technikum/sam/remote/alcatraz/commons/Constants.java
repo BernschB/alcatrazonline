@@ -38,4 +38,7 @@ public interface Constants {
      * RMI Object service name for IServers
      */
     public final static String RMI_SERVER_SERVICE = "ServerService";
+
+    public final static String EX_MSG_GAME_REGISTRY_FAILED
+            = "Registration of player {0} failed";
 }
