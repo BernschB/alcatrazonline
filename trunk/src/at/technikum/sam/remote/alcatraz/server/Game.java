@@ -19,6 +19,7 @@
  **/
 package at.technikum.sam.remote.alcatraz.server;
 
+import at.technikum.sam.remote.alcatraz.commons.Constants;
 import at.technikum.sam.remote.alcatraz.commons.GameRegistryException;
 import at.technikum.sam.remote.alcatraz.commons.NameAlreadyInUseException;
 import at.technikum.sam.remote.alcatraz.commons.PlayerAdapter;
@@ -31,14 +32,12 @@ import java.util.Vector;
  * Helper class for managing player lists and number of players and synchronize
  * them over spread.
  */
-public class Game implements Serializable {
+public class Game implements Serializable, Constants {
 
-    private final static int MAXPLAYERS = 4;
     private Vector<PlayerAdapter> players;
-
+    private static int sequencer = -1;
     /**
-     * Constructor of GameRegistry is private due to only one game is
-     * processed on a server at a time, which is in fact a singleton pattern.
+     * Constructor of GameRegistry
      */
     public Game() {
         /*
@@ -46,6 +45,7 @@ public class Game implements Serializable {
          * so that no resizing has to be performed.
          */
         players = new Vector<PlayerAdapter>(MAXPLAYERS);
+        sequencer = -1;
     }
 
     /**
@@ -120,5 +120,10 @@ public class Game implements Serializable {
      */
     public void Reset() {
         this.players.clear();
+        sequencer = -1;
+    }
+
+    public static int getNewPlayerId() {
+        return sequencer++;
     }
 }
