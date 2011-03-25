@@ -28,6 +28,9 @@ import spread.SpreadConnection;
 import spread.SpreadException;
 import spread.SpreadGroup;
 import spread.SpreadMessage;
+import spread.MembershipInfo;
+
+import  at.technikum.sam.remote.alcatraz.commons.Util;
 
 /**
  *
@@ -95,11 +98,10 @@ public class RegistryServer implements AdvancedMessageListener, Constants {
          */
     }
 
-    public void membershipMessageReceived(SpreadMessage sm) {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void membershipMessageReceived(SpreadMessage spreadMessage) {
 
         /* comment */
-        
+                    Util.printDebug("membershipMessageReceived");
         /**
          * TODO: Implement group join/leave here
          */
@@ -107,6 +109,32 @@ public class RegistryServer implements AdvancedMessageListener, Constants {
         /**
          * TODO: Implement master server failover here
          */
+        MembershipInfo membershipInformation = spreadMessage.getMembershipInfo();
+
+        SpreadGroup members[] = membershipInformation.getMembers();
+        if (membershipInformation.isRegularMembership())
+        {
+            if (membershipInformation.isCausedByJoin())
+            {
+                Util.printDebug("New member joined.");
+                for (SpreadGroup g : members) {
+                    Util.printDebug(g.toString());
+                }
+            }
+            else if (membershipInformation.isCausedByLeave()
+                    || membershipInformation.isCausedByDisconnect()
+                    || membershipInformation.isCausedByNetwork())
+            {
+                Util.printDebug("Member left group.");
+                for (SpreadGroup g : members) {
+                    Util.printDebug(g.toString());
+                }
+            }
+        }
+    }
+
+    private void electMaster(SpreadGroup group[]) {
+        /* Preisfrage: Wie komme ich an die ID dieses Servers? */
     }
 
 }
