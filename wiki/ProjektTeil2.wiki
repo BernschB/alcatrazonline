@@ -3,6 +3,6 @@
 
 Teil zwei dient dem frühzeitigen Feststellen von grundsätzlichen Problemen mit dem Umgang der Technologie. Dazu bereiten Sie bitte bis zur zweiten Einheit folgende Punkte vor:
 
-   # Mündlicher Bericht über aktuellen Zwischenstand und eventuelle Probleme.
+   # Mündlicher Bericht über aktuellen Zwischenstand und eventuelle [Probleme].
    # Prinzipielle Durchführung einer Remote Method Invocation in der gewählten Technologie.
    # Senden und Empfangen von Group Communication Messages mittels Spread.
