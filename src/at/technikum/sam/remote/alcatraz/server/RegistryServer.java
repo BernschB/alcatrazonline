@@ -19,6 +19,7 @@
  **/
 package at.technikum.sam.remote.alcatraz.server;
 
+import at.technikum.sam.remote.alcatraz.commons.Constants;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.rmi.Naming;
@@ -32,7 +33,7 @@ import spread.SpreadMessage;
  *
  * TODO: comment
  */
-public class RegistryServer implements AdvancedMessageListener {
+public class RegistryServer implements AdvancedMessageListener, Constants {
 
     private static String spreadHost = "localhost";
 
@@ -50,7 +51,11 @@ public class RegistryServer implements AdvancedMessageListener {
             {
                     /* Connect to local spread daemon and get spread group */
                     connection = new SpreadConnection();
-                    connection.connect(InetAddress.getByName(spreadHost), 0, "AlcatrazRegistry", true, true);
+                    connection.connect( InetAddress.getByName(spreadHost),
+                                        0,
+                                        SPREAD_SERVER_GROUP_NAME,
+                                        true,
+                                        true);
 
                     /* Add AdvancedMessageListener Implementation to this Spread connection */
                     connection.add(this);
@@ -71,7 +76,8 @@ public class RegistryServer implements AdvancedMessageListener {
             RegistryServerImplementation r = new RegistryServerImplementation();
             System.out.println("Creating Registry...");
             java.rmi.registry.LocateRegistry.createRegistry(1099);
-            Naming.rebind("rmi://localhost:1099/RegistryService", r);
+            Naming.rebind("rmi://localhost:1099/"
+                    .concat(RMI_SERVER_SERVICE), r);
             System.out.println("Registry Server up and running.");
         } catch (Exception e) {
             System.out.println("Something went wrong while bringing up server.");
