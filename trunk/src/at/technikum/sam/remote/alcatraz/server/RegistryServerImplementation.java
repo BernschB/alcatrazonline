@@ -17,7 +17,6 @@
  * @date 2011/03/10
  *
  **/
-
 package at.technikum.sam.remote.alcatraz.server;
 
 import at.falb.games.alcatraz.api.Player;
@@ -80,8 +79,8 @@ public class RegistryServerImplementation extends UnicastRemoteObject
             client = (ClientImplementation) Naming
                 .lookup("rmi:/"
                 .concat(getClientHost())
-                .concat("/")
-                .concat(Constants.RMI_CLIENT_SERVICE));
+                .concat(":1099/")
+                .concat(RMI_CLIENT_SERVICE));
         } catch (ServerNotActiveException ex) {
             Logger.getLogger(RegistryServerImplementation.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NotBoundException ex) {
@@ -132,8 +131,28 @@ public class RegistryServerImplementation extends UnicastRemoteObject
         currentGame.removePlayer(player);
     }
 
-    public void forceStart(PlayerAdapter player) throws GameStartException, RemoteException {
-        throw new UnsupportedOperationException("Not supported yet.");
+    public void forceStart(PlayerAdapter player)
+            throws GameStartException, RemoteException {
+        if(currentGame.hasPlayer(player)) {
+            PlayerAdapter p = null;
+            Iterator i = currentGame.getPlayers().iterator();
+            int newid = -1;
+
+            while(i.hasNext()) {
+                p = (PlayerAdapter) i.next();
+
+                /* Rearrange Player Id's from 0 to 3 */
+                newid++;
+                p.setId(newid);
+
+                /* start Game on client implementation */
+                p.getClientstub().startGame(currentGame.getPlayers());
+            }
+
+            currentGame.Reset();
+        } else {
+            throw new GameStartException();
+        }
     }
 
     /**
@@ -156,5 +175,10 @@ public class RegistryServerImplementation extends UnicastRemoteObject
         }
 
         return false;
+    }
+
+    private void startGame() {
+        /* TODO: implement generic startGame Method and use it in forceStart()
+         and also for automatic MAXPLAYERS-reached start */
     }
 }

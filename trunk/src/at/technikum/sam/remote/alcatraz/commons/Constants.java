@@ -32,13 +32,23 @@ public interface Constants {
     /**
      * RMI Object service name for IClients
      */
-    public final static String RMI_CLIENT_SERVICE = "ClientService";
+    public final static String RMI_CLIENT_SERVICE
+            = "ClientService";
 
     /**
      * RMI Object service name for IServers
      */
-    public final static String RMI_SERVER_SERVICE = "ServerService";
+    public final static String RMI_SERVER_SERVICE 
+            = "RegistryService";
 
+    /**
+     * Spread Server Group Name
+     */
+    public final static String SPREAD_SERVER_GROUP_NAME
+            = "AlcatrazRegistry";
+    /**
+     * Exception Message #1 for GameRegistryException
+     */
     public final static String EX_MSG_GAME_REGISTRY_FAILED
             = "Registration of player {0} failed";
 }

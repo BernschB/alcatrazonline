@@ -123,6 +123,25 @@ public class Game implements Serializable, Constants {
         sequencer = -1;
     }
 
+    /**
+     * Answers the question if a player is participating at this game
+     *
+     * @param player the player who should be looked up
+     * @return true if yes, false if no
+     */
+    public boolean hasPlayer(PlayerAdapter player) {
+        return this.players.contains(player);
+    }
+
+    /** TODO: Player ID Sequencing is not aware of aborted games and its 
+     * players. ID Collissions possible after aborting (resetting) a game
+     */
+    /**
+     * Helper function to sequence playerID's and reset the sequencer
+     * if a game started
+     *
+     * @return A number which isn't used as player ID in the current Game.
+     */
     public static int getNewPlayerId() {
         return sequencer++;
     }
