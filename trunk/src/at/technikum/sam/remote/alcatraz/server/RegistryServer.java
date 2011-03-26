@@ -86,6 +86,21 @@ public class RegistryServer implements AdvancedMessageListener, Constants {
             System.out.println("Something went wrong while bringing up server.");
             e.printStackTrace();
         }
+        byte buffer[]=new byte[80];
+        do {
+            try {
+            System.in.read(buffer);
+            if (buffer[0]=='j') {
+                group = new SpreadGroup();
+                group.join(connection,SPREAD_SERVER_GROUP_NAME);
+            } else if (buffer[0]=='l') {
+                group.leave();
+            }
+        } catch (Exception e) {
+            System.out.println("Something went wrong while bringing up server.");
+            e.printStackTrace();
+        }
+        }while (buffer[0]!='q');
     }
 
     public void regularMessageReceived(SpreadMessage sm) {
