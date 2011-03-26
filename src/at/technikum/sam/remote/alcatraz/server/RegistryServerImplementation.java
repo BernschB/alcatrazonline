@@ -108,6 +108,10 @@ public class RegistryServerImplementation extends UnicastRemoteObject
             throws GameRegistryException, RemoteException {
         try {
             currentGame.addPlayer(player);
+            if(currentGame.getNumberOfPlayers()==MAXPLAYERS) {
+                startGame();
+            }
+
         } catch (NameAlreadyInUseException ex) {
 
             Logger.getLogger(RegistryServerImplementation.class.getName())
@@ -116,8 +120,13 @@ public class RegistryServerImplementation extends UnicastRemoteObject
             throw new GameRegistryException(
                     String.format(EX_MSG_GAME_REGISTRY_FAILED,
                         player.getName()));
+        } catch (GameStartException ex) {
+
+             Logger.getLogger(RegistryServerImplementation.class.getName())
+                     .log(Level.SEVERE, null, ex);
         }
     }
+
 
     /**
      * Removes a given player from the current game
@@ -134,22 +143,7 @@ public class RegistryServerImplementation extends UnicastRemoteObject
     public void forceStart(PlayerAdapter player)
             throws GameStartException, RemoteException {
         if(currentGame.hasPlayer(player)) {
-            PlayerAdapter p = null;
-            Iterator i = currentGame.getPlayers().iterator();
-            int newid = -1;
-
-            while(i.hasNext()) {
-                p = (PlayerAdapter) i.next();
-
-                /* Rearrange Player Id's from 0 to 3 */
-                newid++;
-                p.setId(newid);
-
-                /* start Game on client implementation */
-                p.getClientstub().startGame(currentGame.getPlayers());
-            }
-
-            currentGame.Reset();
+            startGame();
         } else {
             throw new GameStartException();
         }
@@ -177,8 +171,22 @@ public class RegistryServerImplementation extends UnicastRemoteObject
         return false;
     }
 
-    private void startGame() {
+    private void startGame() throws GameStartException, RemoteException {
         /* TODO: implement generic startGame Method and use it in forceStart()
          and also for automatic MAXPLAYERS-reached start */
+        PlayerAdapter p = null;
+        Iterator i = currentGame.getPlayers().iterator();
+        int newid = -1;
+
+        while(i.hasNext()) {
+            p = (PlayerAdapter) i.next();
+            /* Rearrange Player Id's from 0 to 3 */
+            newid++;
+            p.setId(newid);
+            /* start Game on client implementation */
+            p.getClientstub().startGame(currentGame.getPlayers());
+        }
+
+        currentGame.Reset();
     }
 }
