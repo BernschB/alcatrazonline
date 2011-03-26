@@ -12,4 +12,5 @@ _Derzeit werden für jeden neuen Player von einem Sequencer einfach aufsteigende
 = Spiele-Start =
 _Ist die Start-Methode eines Games aus einem bestimmten Grund an den Registry-Server gebunden?
 Ich denke die Impl. der Funktionen zum Game-Start macht im Game-Objekt mehr Sinn. Ich kann auch so einfacher auf die angemeldeten Spieler zugreifen.
-Spricht irgendwas dagegen?_
+Spricht irgendwas dagegen?
+Warum werden die IDs beim Force-Start neu vergeben?_
