@@ -12,6 +12,8 @@ _Wahrscheinlich wäre es logischer die IAdvancedListener Implementierung auch in
 = PlayerID's =
 _Derzeit werden für jeden neuen Player von einem Sequencer einfach aufsteigende Nummern vergeben, sodass kein Spieler die gleiche Player ID bekommt. Spätestens nach dem Spielstart müssen die PlayerID's der 4 Spieler aber neu (von 0 bis 3) durchnummeriert werden, weil die Alcatraz API dies erwartet. Oder?_
 
+*Warum glaubt ihr, dass 0-3 vorgegeben ist? Als Parameter ist int vorgegeben,d.h. wir können -2147483648 ... 2147483647 vergeben.*
+
 = Spiele-Start =
 _Ist die Start-Methode eines Games aus einem bestimmten Grund an den Registry-Server gebunden? Ich denke die Impl. der Funktionen zum Game-Start macht im Game-Objekt mehr Sinn. Ich kann auch so einfacher auf die angemeldeten Spieler zugreifen.
 Spricht irgendwas dagegen?_
