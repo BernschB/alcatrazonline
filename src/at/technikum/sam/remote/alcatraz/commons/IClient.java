@@ -35,15 +35,27 @@ public interface IClient extends Remote {
     void reportNewMaster(String host, int port)
             throws RemoteException;
 
+
     boolean isAlive()
             throws RemoteException;
-    
+    /*
+     * TODO: Wieso boolean hier???
+     * Exceptions ersetzten return wert! void sollte eigentlich reichen!
+     */
     boolean startGame(List<PlayerAdapter> players)
             throws GameStartException, RemoteException;
 
-    void doMove(Player player, Prisoner prisoner,  int rowOrCol, int row, int col)
-            throws MoveException, RemoteException;
 
+    void doMove(Player player, Prisoner prisoner,  int rowOrCol, int row, int col)
+            throws RemoteException;
+
+    /**
+     *
+     * TODO: Brauchen wir das wirklich? Ein erfolgreiches doMove an den nächsten
+     * Spieler in der Reihe schaltet beim betreffenden Spieler im Alcatraz
+     * automatisch die Eingabe frei! Hab das entsprechend schon eimal in Client
+     * so implementiert
+     */
     void yourTurn()
             throws RemoteException;
 

@@ -22,7 +22,7 @@ package at.technikum.sam.remote.alcatraz.commons;
 
 /**
  *
- * TODO: Comment
+ * TODO: Für was brauchen wir die???
  */
 public class MoveException extends Exception {
 
