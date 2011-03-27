@@ -21,4 +21,4 @@ Spricht irgendwas dagegen?_
 _Warum werden die IDs beim Force-Start neu vergeben?_
 
 *Weil meiner Information nach die Alcatraz API in einem Spiel die ID's von 0 bis 3 durchnummeriert erwartet (siehe auch offene Frage oben)*
-*Dann macht es vielleicht mehr Sinn die ID beim Anmelden zu vergeben und beim Abmelden zu entfernen. In der API-Dos steht, dass einen Spieler der eine ID hat keine andere zugeteilt werden soll.*
+_Dann macht es vielleicht mehr Sinn die ID beim Anmelden zu vergeben und beim Abmelden zu entfernen. In der API-Dos steht, dass einen Spieler der eine ID hat keine andere zugeteilt werden soll._
