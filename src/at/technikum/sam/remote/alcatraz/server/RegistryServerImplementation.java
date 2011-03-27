@@ -27,6 +27,7 @@ import at.technikum.sam.remote.alcatraz.commons.IRegistryServer;
 import at.technikum.sam.remote.alcatraz.commons.NameAlreadyInUseException;
 import at.technikum.sam.remote.alcatraz.commons.PlayerAdapter;
 import at.technikum.sam.remote.alcatraz.commons.Constants;
+import at.technikum.sam.remote.alcatraz.commons.Util;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
@@ -38,21 +39,31 @@ import java.util.Iterator;
 import java.util.Vector;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import spread.AdvancedMessageListener;
+import spread.MembershipInfo;
+import spread.SpreadGroup;
+import spread.SpreadMessage;
 
 /**
  *
  * TODO: Comment
  */
 public class RegistryServerImplementation extends UnicastRemoteObject
-        implements IRegistryServer, Serializable, Constants {
+        implements IRegistryServer, AdvancedMessageListener,
+        Serializable, Constants {
 
     private static Game currentGame = null;
-    
+
+    /**
+     * TODO: comment
+     * @throws RemoteException
+     */
     public RegistryServerImplementation() throws RemoteException {
         currentGame = new Game();
         currentGame.Reset();
     }
 
+    // <editor-fold defaultstate="collapsed" desc="IRegistryServer Implementation">
     /**
      * Creates a new player object with an unique player ID and the
      * given name and associates it with the requesters stub
@@ -65,22 +76,18 @@ public class RegistryServerImplementation extends UnicastRemoteObject
      */
     public PlayerAdapter createPlayer(String name)
             throws NameAlreadyInUseException, RemoteException {
-        
-        if(nameInUse(name)) {
+
+        if (nameInUse(name)) {
             throw new NameAlreadyInUseException();
         }
 
         Player newPlayer = new Player(Game.getNewPlayerId());
         newPlayer.setName(name);
-        
+
         ClientImplementation client = null;
 
         try {
-            client = (ClientImplementation) Naming
-                .lookup("rmi:/"
-                .concat(getClientHost())
-                .concat(":1099/")
-                .concat(RMI_CLIENT_SERVICE));
+            client = (ClientImplementation) Naming.lookup("rmi:/".concat(getClientHost()).concat(":1099/").concat(RMI_CLIENT_SERVICE));
         } catch (ServerNotActiveException ex) {
             Logger.getLogger(RegistryServerImplementation.class.getName()).log(Level.SEVERE, null, ex);
         } catch (NotBoundException ex) {
@@ -89,8 +96,8 @@ public class RegistryServerImplementation extends UnicastRemoteObject
             Logger.getLogger(RegistryServerImplementation.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        if(client != null) {
-             return new PlayerAdapter(newPlayer, client);
+        if (client != null) {
+            return new PlayerAdapter(newPlayer, client);
         } else {
             return null;
         }
@@ -108,25 +115,22 @@ public class RegistryServerImplementation extends UnicastRemoteObject
             throws GameRegistryException, RemoteException {
         try {
             currentGame.addPlayer(player);
-            if(currentGame.getNumberOfPlayers()==MAXPLAYERS) {
+            if (currentGame.getNumberOfPlayers() == MAXPLAYERS) {
                 startGame();
             }
 
         } catch (NameAlreadyInUseException ex) {
 
-            Logger.getLogger(RegistryServerImplementation.class.getName())
-                    .log(Level.SEVERE, null, ex);
+            Logger.getLogger(RegistryServerImplementation.class.getName()).log(Level.SEVERE, null, ex);
 
             throw new GameRegistryException(
                     String.format(EX_MSG_GAME_REGISTRY_FAILED,
-                        player.getName()));
+                    player.getName()));
         } catch (GameStartException ex) {
 
-             Logger.getLogger(RegistryServerImplementation.class.getName())
-                     .log(Level.SEVERE, null, ex);
+            Logger.getLogger(RegistryServerImplementation.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
 
     /**
      * Removes a given player from the current game
@@ -140,15 +144,160 @@ public class RegistryServerImplementation extends UnicastRemoteObject
         currentGame.removePlayer(player);
     }
 
+    /**
+     * TODO: comment
+     * @param player
+     * @throws GameStartException
+     * @throws RemoteException
+     */
     public void forceStart(PlayerAdapter player)
             throws GameStartException, RemoteException {
-        if(currentGame.hasPlayer(player)) {
+        if (currentGame.hasPlayer(player)) {
             startGame();
         } else {
             throw new GameStartException();
         }
     }
+    // </editor-fold>
 
+    // <editor-fold defaultstate="collapsed" desc="AdvancedMessageListener Implementation">
+    /**
+     * TODO: comment
+     * @param spreadMessage
+     */
+    public void regularMessageReceived(SpreadMessage spreadMessage) {
+        throw new UnsupportedOperationException("Not supported yet.");
+
+        /* Blabhdhfod */
+
+        /**
+         * TODO: Implement Server state synchronisation here
+         */
+    }
+
+    /**
+     * TODO: comment
+     * @param spreadMessage
+     */
+    public void membershipMessageReceived(SpreadMessage spreadMessage) {
+
+        /* comment */
+        Util.printDebug("membershipMessageReceived");
+        /**
+         * TODO: Implement group join/leave here
+         */
+        /**
+         * TODO: Implement master server failover here
+         */
+        MembershipInfo membershipInformation = spreadMessage.getMembershipInfo();
+
+        SpreadGroup members[] = membershipInformation.getMembers();
+        if (membershipInformation.isRegularMembership()) {
+            if (membershipInformation.isCausedByJoin()) {
+                Util.printDebug("New member joined.");
+                Util.printDebug("List of existing members.");
+                for (SpreadGroup g : members) {
+                    Util.printDebug(g.toString());
+                }
+            } else if (membershipInformation.isCausedByLeave()
+                    || membershipInformation.isCausedByDisconnect()
+                    || membershipInformation.isCausedByNetwork()) {
+                Util.printDebug("Member left group.");
+                Util.printDebug("List of existing members.");
+                for (SpreadGroup g : members) {
+                    Util.printDebug(g.toString());
+                }
+            }
+        }
+
+        SpreadMessage msg = spreadMessage;
+        try {
+            System.out.println("*****************RECTHREAD Received Message************");
+            if (msg.isRegular()) {
+                System.out.print("Received a ");
+                if (msg.isUnreliable()) {
+                    System.out.print("UNRELIABLE");
+                } else if (msg.isReliable()) {
+                    System.out.print("RELIABLE");
+                } else if (msg.isFifo()) {
+                    System.out.print("FIFO");
+                } else if (msg.isCausal()) {
+                    System.out.print("CAUSAL");
+                } else if (msg.isAgreed()) {
+                    System.out.print("AGREED");
+                } else if (msg.isSafe()) {
+                    System.out.print("SAFE");
+                }
+                System.out.println(" message.");
+
+                System.out.println("Sent by  " + msg.getSender() + ".");
+
+                System.out.println("Type is " + msg.getType() + ".");
+
+                if (msg.getEndianMismatch() == true) {
+                    System.out.println("There is an endian mismatch.");
+                } else {
+                    System.out.println("There is no endian mismatch.");
+                }
+
+                SpreadGroup groups[] = msg.getGroups();
+                System.out.println("To " + groups.length + " groups.");
+
+                byte data[] = msg.getData();
+                System.out.println("The data is " + data.length + " bytes.");
+
+                System.out.println("The message is: " + new String(data));
+            } else if (msg.isMembership()) {
+                MembershipInfo info = msg.getMembershipInfo();
+                printMembershipInfo(info);
+            } else if (msg.isReject()) {
+                // Received a Reject message
+                System.out.print("Received a ");
+                if (msg.isUnreliable()) {
+                    System.out.print("UNRELIABLE");
+                } else if (msg.isReliable()) {
+                    System.out.print("RELIABLE");
+                } else if (msg.isFifo()) {
+                    System.out.print("FIFO");
+                } else if (msg.isCausal()) {
+                    System.out.print("CAUSAL");
+                } else if (msg.isAgreed()) {
+                    System.out.print("AGREED");
+                } else if (msg.isSafe()) {
+                    System.out.print("SAFE");
+                }
+                System.out.println(" REJECTED message.");
+
+                System.out.println("Sent by  " + msg.getSender() + ".");
+
+                System.out.println("Type is " + msg.getType() + ".");
+
+                if (msg.getEndianMismatch() == true) {
+                    System.out.println("There is an endian mismatch.");
+                } else {
+                    System.out.println("There is no endian mismatch.");
+                }
+
+                SpreadGroup groups[] = msg.getGroups();
+                System.out.println("To " + groups.length + " groups.");
+
+                byte data[] = msg.getData();
+                System.out.println("The data is " + data.length + " bytes.");
+
+                System.out.println("The message is: " + new String(data));
+            } else {
+                System.out.println("Message is of unknown type: " + msg.getServiceType());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.exit(1);
+        }
+
+    }
+
+    // </editor-fold>
+
+    // <editor-fold defaultstate="collapsed" desc="Private Methods">
     /**
      * Looks up, if a players nickname is in use already
      * TODO: synchronization issues??? race conditions?
@@ -161,9 +310,9 @@ public class RegistryServerImplementation extends UnicastRemoteObject
         PlayerAdapter pa = null;
         Iterator i = v.iterator();
 
-        while(i.hasNext()) {
-            pa = (PlayerAdapter)i.next();
-            if(pa.getName().equalsIgnoreCase(name)) {
+        while (i.hasNext()) {
+            pa = (PlayerAdapter) i.next();
+            if (pa.getName().equalsIgnoreCase(name)) {
                 return true;
             }
         }
@@ -171,14 +320,77 @@ public class RegistryServerImplementation extends UnicastRemoteObject
         return false;
     }
 
+    /**
+     * TODO: comment
+     * @param group
+     */
+    private void electMaster(SpreadGroup group[]) {
+        /* Preisfrage: Wie komme ich an die ID dieses Servers? */
+    }
+
+    /**
+     * TODO: comment
+     * @param info
+     */
+    private void printMembershipInfo(MembershipInfo info) {
+        SpreadGroup group = info.getGroup();
+        if (info.isRegularMembership()) {
+            SpreadGroup members[] = info.getMembers();
+            MembershipInfo.VirtualSynchronySet virtual_synchrony_sets[] = info.getVirtualSynchronySets();
+            MembershipInfo.VirtualSynchronySet my_virtual_synchrony_set = info.getMyVirtualSynchronySet();
+
+            System.out.println("REGULAR membership for group " + group
+                    + " with " + members.length + " members:");
+            for (int i = 0; i < members.length; ++i) {
+                System.out.println("\t\t" + members[i]);
+            }
+            System.out.println("Group ID is " + info.getGroupID());
+
+            System.out.print("\tDue to ");
+            if (info.isCausedByJoin()) {
+                System.out.println("the JOIN of " + info.getJoined());
+            } else if (info.isCausedByLeave()) {
+                System.out.println("the LEAVE of " + info.getLeft());
+            } else if (info.isCausedByDisconnect()) {
+                System.out.println("the DISCONNECT of " + info.getDisconnected());
+            } else if (info.isCausedByNetwork()) {
+                System.out.println("NETWORK change");
+                for (int i = 0; i < virtual_synchrony_sets.length; ++i) {
+                    MembershipInfo.VirtualSynchronySet set = virtual_synchrony_sets[i];
+                    SpreadGroup setMembers[] = set.getMembers();
+                    System.out.print("\t\t");
+                    if (set == my_virtual_synchrony_set) {
+                        System.out.print("(LOCAL) ");
+                    } else {
+                        System.out.print("(OTHER) ");
+                    }
+                    System.out.println("Virtual Synchrony Set " + i + " has "
+                            + set.getSize() + " members:");
+                    for (int j = 0; j < set.getSize(); ++j) {
+                        System.out.println("\t\t\t" + setMembers[j]);
+                    }
+                }
+            }
+        } else if (info.isTransition()) {
+            System.out.println("TRANSITIONAL membership for group " + group);
+        } else if (info.isSelfLeave()) {
+            System.out.println("SELF-LEAVE message for group " + group);
+        }
+    }
+
+    /**
+     * TODO: comment
+     * @throws GameStartException
+     * @throws RemoteException
+     */
     private void startGame() throws GameStartException, RemoteException {
         /* TODO: implement generic startGame Method and use it in forceStart()
-         and also for automatic MAXPLAYERS-reached start */
+        and also for automatic MAXPLAYERS-reached start */
         PlayerAdapter p = null;
         Iterator i = currentGame.getPlayers().iterator();
         int newid = -1;
 
-        while(i.hasNext()) {
+        while (i.hasNext()) {
             p = (PlayerAdapter) i.next();
             /* Rearrange Player Id's from 0 to 3 */
             newid++;
@@ -189,4 +401,5 @@ public class RegistryServerImplementation extends UnicastRemoteObject
 
         currentGame.Reset();
     }
+    // </editor-fold>
 }
