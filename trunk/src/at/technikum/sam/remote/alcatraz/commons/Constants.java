@@ -30,6 +30,11 @@ public interface Constants {
     public final static int MAXPLAYERS = 4;
 
     /**
+     * Timeout to wait between retries if move propagation fails
+     */
+    public final static int TIMEOUT = 6000;
+
+    /**
      * RMI Object service name for IClients
      */
     public final static String RMI_CLIENT_SERVICE
