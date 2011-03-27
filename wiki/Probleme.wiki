@@ -1,18 +1,20 @@
 #summary offene Fragen und Probleme zum momentanen Pojektzeitpunkt
 
 = Verwaltung der Games am Server =
-_Frage: Wird nun tatsächlich nur ein Spiel zur gleichen Zeit verwaltet, oder gibt es Fälle wo bspw. ein Spiel gestartet wird, während für ein zweites schon Spieler registriert werden können?_
+_*Frage: Wird nun tatsächlich nur ein Spiel zur gleichen Zeit verwaltet, oder gibt es Fälle wo bspw. ein Spiel gestartet wird, während für ein zweites schon Spieler registriert werden können?*_
 
 = Spread Konfiguration =
-_Frage: Wie werden nun die Server in der Spread Config am schlauesten konfiguriert?_
+_*Frage: Wie werden nun die Server in der Spread Config am schlauesten konfiguriert?*_
 
 = PlayerID's =
-_Derzeit werden für jeden neuen Player von einem Sequencer einfach aufsteigende Nummern vergeben, sodass kein Spieler die gleiche Player ID bekommt. Spätestens nach dem Spielstart müssen die PlayerID's der 4 Spieler aber neu (von 0 bis 3) durchnummeriert werden, weil die Alcatraz API dies erwartet. Oder?_
+_*Derzeit werden für jeden neuen Player von einem Sequencer einfach aufsteigende Nummern vergeben, sodass kein Spieler die gleiche Player ID bekommt. Spätestens nach dem Spielstart müssen die PlayerID's der 4 Spieler aber neu (von 0 bis 3) durchnummeriert werden, weil die Alcatraz API dies erwartet. Oder?*_
 
 = Spiele-Start =
-_Ist die Start-Methode eines Games aus einem bestimmten Grund an den Registry-Server gebunden? Ich denke die Impl. der Funktionen zum Game-Start macht im Game-Objekt mehr Sinn. Ich kann auch so einfacher auf die angemeldeten Spieler zugreifen.
-Spricht irgendwas dagegen?_
+_*Ist die Start-Methode eines Games aus einem bestimmten Grund an den Registry-Server gebunden? Ich denke die Impl. der Funktionen zum Game-Start macht im Game-Objekt mehr Sinn. Ich kann auch so einfacher auf die angemeldeten Spieler zugreifen.
+Spricht irgendwas dagegen?*_
+
 Nein, dagegen spricht sicher nichts, ganz im Gegenteil fänds dort auch sinnvoller.
 
-_Warum werden die IDs beim Force-Start neu vergeben?_
+_*Warum werden die IDs beim Force-Start neu vergeben?*_
+
 Weil meiner Information nach die Alcatraz API in einem Spiel die ID's von 0 bis 3 durchnummeriert erwartet (siehe auch offene Frage oben)
