@@ -42,3 +42,5 @@ public class PlayerAdapter implements serializebale {
 }
 }}}
 _Sprich: nicht mehr abgeleitet von Player somit auch keine ID zur Verwaltung (ID ergibt sich aus Position der Player in der Liste)_
+
+*Das hab ich eh so eingebaut -> bitte updaten ;)*
