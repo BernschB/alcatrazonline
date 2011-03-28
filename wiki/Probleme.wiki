@@ -28,19 +28,3 @@ _Mir ist nach der Änderungen folgendes aufgefallen:_
 *_Den Client-Stub kann man leider nicht abfragen weil wir für die Clients keine eigene Registry verwenden sondern die ClientStubs per RMI an den Server übergeben, der wiederum verteilt die Stubs beim Spielstart auf alle anderen Clients!_*
 
 *In der Methode Server.addPlayer wird auf gleiche IDs überprüft, da wir aber keine mehr vergeben, kann das wegfallen oder?*
-
-*_Vorschlag für Änderung am PlayerAdapter:_*
-{{{
-public class PlayerAdapter implements serializebale {
-
-  private String name;
-
-  private IClient clientStub;
-
-  und die entsprechenden Getter und Setter, Konstruktor,...
-
-}
-}}}
-_Sprich: nicht mehr abgeleitet von Player somit auch keine ID zur Verwaltung (ID ergibt sich aus Position der Player in der Liste)_
-
-*Das hab ich eh so eingebaut -> bitte updaten ;)*
