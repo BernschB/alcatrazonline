@@ -24,7 +24,8 @@ _Brauchen wir noch eine createPlayer() Methode_
 _Mir ist nach der Änderungen folgendes aufgefallen:_
 
 *Man muss jetzt bei registerPlayer den clientstub mitübergeben, was etwas sinnfrei ist, da man den auch abfragen kann?!*
-*_Den Client-Stub kann man nicht abfragen und der muss deshalb pass by reference an den Server mit übergeben werden!_*
+
+*_Den Client-Stub kann man leider nicht abfragen weil wir für die Clients keine eigene Registry verwenden sondern die ClientStubs per RMI an den Server übergeben, der wiederum verteilt die Stubs beim Spielstart auf alle anderen Clients!_*
 
 *In der Methode Server.addPlayer wird auf gleiche IDs überprüft, da wir aber keine mehr vergeben, kann das wegfallen oder?*
 
