@@ -20,9 +20,14 @@
 package at.technikum.sam.remote.alcatraz.server;
 
 import at.technikum.sam.remote.alcatraz.commons.Constants;
+import at.technikum.sam.remote.alcatraz.commons.Util;
+import java.io.File;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.rmi.Naming;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import spread.SpreadConnection;
 import spread.SpreadException;
 import spread.SpreadGroup;
@@ -45,6 +50,9 @@ public class RegistryServer implements Constants {
 
   public RegistryServer() {
     try {
+      /*System.out.println("Starting up Spread Daemon...");
+      this.startSpread();*/
+
       System.out.println("Starting up Registry Server instance...");
       RegistryServerImplementation r = new RegistryServerImplementation();
 
@@ -88,9 +96,12 @@ public class RegistryServer implements Constants {
           group.leave();
         } else if (buffer[0]=='m'){
             SpreadMessage message = new SpreadMessage();
-            message.addGroup(group);
+            //message.addGroup(group);
             message.setObject("Teststing Multicast");
             connection.multicast(message);
+        } else if (buffer[0]=='q') {
+            group.leave();
+            System.exit(0);
         }
       } catch (Exception e) {
         System.out.println("Something went wrong while bringing up server.");
@@ -101,5 +112,21 @@ public class RegistryServer implements Constants {
 
   public static SpreadConnection getSpreadConnection() {
       return connection;
+  }
+
+  /**
+   * TODO: Spread Startup Method... Work in Progress
+   */
+  private void startSpread() {
+      ProcessBuilder spreadDaemon = new ProcessBuilder("spread -c spread.conf -n host1");
+
+      spreadDaemon.directory(new File(System.getProperty("user.dir").toString()));
+      Util.printDebug(System.getProperty("user.dir"));
+        try {
+            spreadDaemon.start();
+        } catch (IOException ex) {
+            Logger.getLogger(RegistryServer.class.getName()).log(Level.SEVERE, null, ex);
+            Util.printDebug(ex.toString());
+        }
   }
 }
