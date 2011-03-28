@@ -155,10 +155,12 @@ public class ClientImplementation extends UnicastRemoteObject implements IClient
 
         try {
             this.masterServer = (IRegistryServer) Naming.lookup(
-                    "rmi:/"
+                    "rmi://"
                     .concat(this.masterServerUrl)
-                    .concat(String.valueOf(this.masterServerPort)).
-                    concat(Constants.RMI_SERVER_SERVICE));
+                   // .concat(":")
+                    //.concat(String.valueOf(this.masterServerPort))
+                    .concat("/")
+                    .concat(Constants.RMI_SERVER_SERVICE));
         } catch (MalformedURLException ex) {
             throw ex;
         } catch (NotBoundException ex) {
