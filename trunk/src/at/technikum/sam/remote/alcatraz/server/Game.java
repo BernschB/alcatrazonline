@@ -21,9 +21,12 @@ package at.technikum.sam.remote.alcatraz.server;
 
 import at.technikum.sam.remote.alcatraz.commons.Constants;
 import at.technikum.sam.remote.alcatraz.commons.GameRegistryException;
+import at.technikum.sam.remote.alcatraz.commons.GameStartException;
 import at.technikum.sam.remote.alcatraz.commons.NameAlreadyInUseException;
 import at.technikum.sam.remote.alcatraz.commons.PlayerAdapter;
 import java.io.Serializable;
+import java.rmi.RemoteException;
+import java.util.Iterator;
 import java.util.Vector;
 
 /* TODO: check if synchronizing Singletons is possible ???
@@ -144,5 +147,27 @@ public class Game implements Serializable, Constants {
      */
     public static int getNewPlayerId() {
         return sequencer++;
+    }
+
+    /**
+     * TODO: comment
+     * @throws GameStartException
+     * @throws RemoteException
+     */
+    public void startGame() throws GameStartException, RemoteException {
+        PlayerAdapter p = null;
+        Iterator i = this.getPlayers().iterator();
+        int newid = -1;
+
+        while (i.hasNext()) {
+            p = (PlayerAdapter) i.next();
+            /* Rearrange Player Id's from 0 to 3 */
+            newid++;
+            p.setId(newid);
+            /* start Game on client implementation */
+            p.getClientstub().startGame(this.getPlayers());
+        }
+
+        this.Reset();
     }
 }

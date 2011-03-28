@@ -116,7 +116,7 @@ public class RegistryServerImplementation extends UnicastRemoteObject
         try {
             currentGame.addPlayer(player);
             if (currentGame.getNumberOfPlayers() == MAXPLAYERS) {
-                startGame();
+                currentGame.startGame();
             }
 
         } catch (NameAlreadyInUseException ex) {
@@ -152,8 +152,9 @@ public class RegistryServerImplementation extends UnicastRemoteObject
      */
     public void forceStart(PlayerAdapter player)
             throws GameStartException, RemoteException {
-        if (currentGame.hasPlayer(player)) {
-            startGame();
+        if (currentGame.hasPlayer(player)
+                && currentGame.getNumberOfPlayers() > 1) {
+            currentGame.startGame();
         } else {
             throw new GameStartException();
         }
@@ -378,28 +379,5 @@ public class RegistryServerImplementation extends UnicastRemoteObject
         }
     }
 
-    /**
-     * TODO: comment
-     * @throws GameStartException
-     * @throws RemoteException
-     */
-    private void startGame() throws GameStartException, RemoteException {
-        /* TODO: implement generic startGame Method and use it in forceStart()
-        and also for automatic MAXPLAYERS-reached start */
-        PlayerAdapter p = null;
-        Iterator i = currentGame.getPlayers().iterator();
-        int newid = -1;
-
-        while (i.hasNext()) {
-            p = (PlayerAdapter) i.next();
-            /* Rearrange Player Id's from 0 to 3 */
-            newid++;
-            p.setId(newid);
-            /* start Game on client implementation */
-            p.getClientstub().startGame(currentGame.getPlayers());
-        }
-
-        currentGame.Reset();
-    }
     // </editor-fold>
 }
