@@ -24,5 +24,20 @@ _Brauchen wir noch eine createPlayer() Methode_
 _Mir ist nach der Änderungen folgendes aufgefallen:_
 
 *Man muss jetzt bei registerPlayer den clientstub mitübergeben, was etwas sinnfrei ist, da man den auch abfragen kann?!*
+*_Den Client-Stub kann man nicht abfragen und der muss deshalb pass by reference an den Server mit übergeben werden!_*
 
 *In der Methode Server.addPlayer wird auf gleiche IDs überprüft, da wir aber keine mehr vergeben, kann das wegfallen oder?*
+
+*_Vorschlag für Änderung am PlayerAdapter:_*
+{{{
+public class PlayerAdapter implements serializebale {
+
+  private String name;
+
+  private IClient clientStub;
+
+  und die entsprechenden Getter und Setter, Konstruktor,...
+
+}
+}}}
+_Sprich: nicht mehr abgeleitet von Player somit auch keine ID zur Verwaltung (ID ergibt sich aus Position der Player in der Liste)_
