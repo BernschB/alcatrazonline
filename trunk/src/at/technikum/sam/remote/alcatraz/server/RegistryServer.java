@@ -26,6 +26,7 @@ import java.rmi.Naming;
 import spread.SpreadConnection;
 import spread.SpreadException;
 import spread.SpreadGroup;
+import spread.SpreadMessage;
 
 
 /**
@@ -85,6 +86,11 @@ public class RegistryServer implements Constants {
           group.join(connection, SPREAD_SERVER_GROUP_NAME);
         } else if (buffer[0] == 'l') {
           group.leave();
+        } else if (buffer[0]=='m'){
+            SpreadMessage message = new SpreadMessage();
+            message.addGroup(group);
+            message.setObject("Teststing Multicast");
+            connection.multicast(message);
         }
       } catch (Exception e) {
         System.out.println("Something went wrong while bringing up server.");
