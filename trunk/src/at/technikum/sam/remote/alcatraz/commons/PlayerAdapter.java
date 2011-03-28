@@ -22,12 +22,13 @@ package at.technikum.sam.remote.alcatraz.commons;
 
 import at.falb.games.alcatraz.api.Player;
 import java.io.Serializable;
+import java.rmi.Remote;
 
 /**
  *
  * TODO: Comment
  */
-public class PlayerAdapter extends Player implements Serializable{
+public class PlayerAdapter extends Player implements Serializable, Remote {
 
     private IClient clientstub;
 

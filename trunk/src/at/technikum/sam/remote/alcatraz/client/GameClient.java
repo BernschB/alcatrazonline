@@ -6,11 +6,8 @@
 package at.technikum.sam.remote.alcatraz.client;
 
 import at.technikum.sam.remote.alcatraz.commons.GameRegistryException;
-import at.technikum.sam.remote.alcatraz.commons.GameStartException;
-import at.technikum.sam.remote.alcatraz.commons.IRegistryServer;
 import at.technikum.sam.remote.alcatraz.commons.NameAlreadyInUseException;
 import at.technikum.sam.remote.alcatraz.commons.PlayerAdapter;
-import java.net.MalformedURLException;
 import java.rmi.RemoteException;
 
 /**
@@ -46,8 +43,10 @@ public class GameClient {
           ex.printStackTrace();
       }
 
+      myPlayer.setClientstub(myClient);
+
       try {
-        myClient.getMasterServer().register(new PlayerAdapter(myPlayer, myClient));
+        myClient.getMasterServer().register(myPlayer);
       } catch (GameRegistryException ex) {
           ex.printStackTrace();
       } catch (RemoteException ex) {

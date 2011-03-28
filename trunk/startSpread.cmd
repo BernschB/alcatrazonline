@@ -1,6 +1,6 @@
 @echo off
 @title Starting spread daemon...
 
-spread -c ./spread.conf
+bin\win32\spread.exe -c ./spread.conf
 
 pause

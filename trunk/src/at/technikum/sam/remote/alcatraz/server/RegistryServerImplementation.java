@@ -20,7 +20,6 @@
 package at.technikum.sam.remote.alcatraz.server;
 
 import at.falb.games.alcatraz.api.Player;
-import at.technikum.sam.remote.alcatraz.client.ClientImplementation;
 import at.technikum.sam.remote.alcatraz.commons.GameRegistryException;
 import at.technikum.sam.remote.alcatraz.commons.GameStartException;
 import at.technikum.sam.remote.alcatraz.commons.IRegistryServer;
@@ -85,23 +84,10 @@ public class RegistryServerImplementation extends UnicastRemoteObject
         Player newPlayer = new Player(Game.getNewPlayerId());
         newPlayer.setName(name);
 
-        ClientImplementation client = null;
 
-        try {
-            client = (ClientImplementation) Naming.lookup("rmi:/".concat(getClientHost()).concat(":1099/").concat(RMI_CLIENT_SERVICE));
-        } catch (ServerNotActiveException ex) {
-            Logger.getLogger(RegistryServerImplementation.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NotBoundException ex) {
-            Logger.getLogger(RegistryServerImplementation.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(RegistryServerImplementation.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        return new PlayerAdapter(newPlayer, null);
 
-        if (client != null) {
-            return new PlayerAdapter(newPlayer, client);
-        } else {
-            return null;
-        }
+
     }
 
     /**
