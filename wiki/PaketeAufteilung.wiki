@@ -18,7 +18,7 @@ Um die Arbeit aufzuteilen werden die Paket weiter zerlegt in folgende Pakte und 
  * *Commons*
    * _#DONE#_ Projekt Setup 
    * _#DONE#_ Interfaces
-     * _#Sebastian#_ Implementierung der geplanten Änderungen am IRegistryServer
+     * _#Sebastian#_ mergen von createPlayer und register im IRegistryServer eventuelle Änderungen am PlayerAdapter
    * _#DONE#_ PlayerAdapter Klasse
    * Utility Klasse Grundgerüst (evtl. Logging für Debugging Zwecke)
    * Ressources, Strings, Statics
