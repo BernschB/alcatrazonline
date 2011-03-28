@@ -1,7 +1,7 @@
 #summary Hier wird die Aufteilung des Projekts in einzelne Pakete beschrieben
 #labels Phase-Design
 
-= Aufteilung in Pakete =
+= Aufteilung in Pakete (ToDo's) =
 
 Als Client-Server Anwendung können einmal drei grundsätzliche Pakete festgemacht werden:
   * *Client* - Code der nur von den Clients verwendet wird
