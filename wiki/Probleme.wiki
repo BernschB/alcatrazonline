@@ -14,15 +14,7 @@ _Derzeit werden für jeden neuen Player von einem Sequencer einfach aufsteigende
 
 *_ Stimmt so - siehe Kommentar unten _*
 
-= Spiele-Start =
-_Ist die Start-Methode eines Games aus einem bestimmten Grund an den Registry-Server gebunden? Ich denke die Impl. der Funktionen zum Game-Start macht im Game-Objekt mehr Sinn. Ich kann auch so einfacher auf die angemeldeten Spieler zugreifen.
-Spricht irgendwas dagegen?_
+= Spiele-Start-Ablauf =
+_Brauchen wir noch eine createPlayer() Methode_
 
-*Nein, dagegen spricht sicher nichts, ganz im Gegenteil fänds dort auch sinnvoller.*
-
-
-_Warum werden die IDs beim Force-Start neu vergeben?_
-
-*Weil meiner Information nach die Alcatraz API in einem Spiel die ID's von 0 bis 3 durchnummeriert erwartet (siehe auch offene Frage oben)*
-
-_Dann macht es vielleicht mehr Sinn die ID beim Anmelden zu vergeben und beim Abmelden zu entfernen. In der API-Dos steht, dass einen Spieler der eine ID hat keine andere zugeteilt werden soll._
+*Siehe PaketeAufteilung*
