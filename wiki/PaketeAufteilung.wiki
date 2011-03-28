@@ -41,12 +41,24 @@ Um die Arbeit aufzuteilen werden die Paket weiter zerlegt in folgende Pakte und 
    * _#DONE#_ Server Methode register(...) & unregister(...)
    * Spielstart
     * _#DONE#_ Server Methode forceStart()
-    * 4 Spieler Autostart
-    * generische private Startmethode
+    * _#DONE#_ 4 Spieler Autostart
+    * _#DONE#_ generische private Startmethode
    * _#Christian#_ IAdvancedListener Implementierung
     * Server Synchronisation
     * Master Failure Detection & ELection
     * Join/Leave Group
+   * _#Jürgen#_ Spread Messages versenden (synchronize Game)
+   * _#Stefan#_ Spielerregistrierung umbauen
+    * createPlayer() und register() zu neuer Methode register() zusammenfassen (createPlayer() fliegt raus)
+    * neue register Signatur: public void register(PlayerAdapter player)
+    * PlayerAdapter enthält nur mehr IClient Referenz und Playernamen als String, kein Player Objekt mehr
+    * register macht:
+     * prüfung ob Playernamen bereits vergeben?
+     * prüfung ob IClient bereits in der Liste (nur unter anderem Namen)?
+     * PlayerAdapter zur Liste hinzufügen
+     * Abschluss mit synchronizeGame() um Game an Spread Gruppe zu verschicken
+
+
 
 
  
