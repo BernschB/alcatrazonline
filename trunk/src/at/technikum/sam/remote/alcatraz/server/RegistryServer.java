@@ -36,7 +36,7 @@ import spread.SpreadMessage;
 public class RegistryServer implements Constants {
 
   private static String spreadHost = "localhost";
-  private SpreadConnection connection;
+  private static SpreadConnection connection;
   private SpreadGroup group;
 
   public static void main(String[] args) {
@@ -99,4 +99,7 @@ public class RegistryServer implements Constants {
     } while (buffer[0] != 'q');
   }
 
+  public static SpreadConnection getSpreadConnection() {
+      return connection;
+  }
 }

@@ -119,7 +119,7 @@ public class RegistryServerImplementation extends UnicastRemoteObject
             if (currentGame.getNumberOfPlayers() == MAXPLAYERS) {
                 currentGame.startGame();
             }
-
+            this.synchronizeGame();
         } catch (NameAlreadyInUseException ex) {
 
             Logger.getLogger(RegistryServerImplementation.class.getName()).log(Level.SEVERE, null, ex);
@@ -143,6 +143,7 @@ public class RegistryServerImplementation extends UnicastRemoteObject
     public void unregister(PlayerAdapter player)
             throws GameRegistryException, RemoteException {
         currentGame.removePlayer(player);
+        this.synchronizeGame();
     }
 
     /**
@@ -153,9 +154,9 @@ public class RegistryServerImplementation extends UnicastRemoteObject
      */
     public void forceStart(PlayerAdapter player)
             throws GameStartException, RemoteException {
-        if (currentGame.hasPlayer(player)
-                && currentGame.getNumberOfPlayers() > 1) {
+        if (currentGame.hasPlayer(player) && currentGame.getNumberOfPlayers() > 1) {
             currentGame.startGame();
+            this.synchronizeGame();
         } else {
             throw new GameStartException();
         }
@@ -384,5 +385,21 @@ public class RegistryServerImplementation extends UnicastRemoteObject
         }
     }
 
+    /**
+     * Synchronizes the current Game state to all server implementations in
+     * this Spread Multicast Group
+     */
+    private void synchronizeGame() {
+        SpreadMessage spreadMessage = new SpreadMessage();
+        spreadMessage.addGroup(SPREAD_SERVER_GROUP_NAME); // notwendig ?
+        try {
+            spreadMessage.setObject(currentGame);
+            spreadMessage.setReliable();
+            spreadMessage.setFifo();
+            RegistryServer.getSpreadConnection().multicast(spreadMessage);
+        } catch (SpreadException ex) {
+            Logger.getLogger(RegistryServerImplementation.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     // </editor-fold>
 }
