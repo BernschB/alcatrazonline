@@ -50,15 +50,15 @@ Um die Arbeit aufzuteilen werden die Paket weiter zerlegt in folgende Pakte und 
     * Master Failure Detection & ELection
     * Join/Leave Group
    * _#Jürgen#_ Spread Messages versenden (synchronize Game)
-   * _#Stefan#_ Spielerregistrierung umbauen
-    * createPlayer() und register() zu neuer Methode register() zusammenfassen (createPlayer() fliegt raus)
-    * neue register Signatur: public void register(PlayerAdapter player)
-    * PlayerAdapter enthält nur mehr IClient Referenz und Playernamen als String, kein Player Objekt mehr
-    * register macht:
-     * prüfung ob Playernamen bereits vergeben?
-     * prüfung ob IClient bereits in der Liste (nur unter anderem Namen)?
-     * PlayerAdapter zur Liste hinzufügen
-     * Abschluss mit synchronizeGame() um Game an Spread Gruppe zu verschicken
+   * _#DONE#_ Spielerregistrierung umbauen
+    * _#DONE#_ createPlayer() und register() zu neuer Methode register() zusammenfassen (createPlayer() fliegt raus)
+    * _#DONE#_ neue register Signatur: public void register(PlayerAdapter player)
+    * _#DONE#_ PlayerAdapter enthält nur mehr IClient Referenz und Playernamen als String, kein Player Objekt mehr
+    * _#DONE#_ register macht:
+     * _#DONE#_ prüfung ob Playernamen bereits vergeben?
+     * _#DONE#_ prüfung ob IClient bereits in der Liste (nur unter anderem Namen)?
+     * _#DONE#_ PlayerAdapter zur Liste hinzufügen
+     * _#DONE#_ Abschluss mit synchronizeGame() um Game an Spread Gruppe zu verschicken
 
 
 
