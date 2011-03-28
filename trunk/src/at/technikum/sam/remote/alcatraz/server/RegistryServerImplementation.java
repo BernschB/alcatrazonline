@@ -23,7 +23,9 @@ import at.falb.games.alcatraz.api.Player;
 import at.technikum.sam.remote.alcatraz.commons.GameRegistryException;
 import at.technikum.sam.remote.alcatraz.commons.GameStartException;
 import at.technikum.sam.remote.alcatraz.commons.IRegistryServer;
+import at.technikum.sam.remote.alcatraz.commons.IClient;
 import at.technikum.sam.remote.alcatraz.commons.NameAlreadyInUseException;
+import at.technikum.sam.remote.alcatraz.commons.ClientAlreadyRegisteredException;
 import at.technikum.sam.remote.alcatraz.commons.PlayerAdapter;
 import at.technikum.sam.remote.alcatraz.commons.Constants;
 import at.technikum.sam.remote.alcatraz.commons.Util;
@@ -65,42 +67,34 @@ public class RegistryServerImplementation extends UnicastRemoteObject
 
     // <editor-fold defaultstate="collapsed" desc="IRegistryServer Implementation">
     /**
-     * Creates a new player object with an unique player ID and the
-     * given name and associates it with the requesters stub
-     *
-     * @param name the new players nickname
-     * @return a PlayerAdapter object containing the player and its stub or
-     * NULL if no player could be created
-     * @throws NameAlreadyInUseException if the given is already used
-     * @throws RemoteException if the associated client stub cannot be reached
-     */
-    public PlayerAdapter createPlayer(String name)
-            throws NameAlreadyInUseException, RemoteException {
-
-        if (nameInUse(name)) {
-            throw new NameAlreadyInUseException();
-        }
-
-        Player newPlayer = new Player(Game.getNewPlayerId());
-        newPlayer.setName(name);
-
-
-        return new PlayerAdapter(newPlayer, null);
-
-
-    }
-
-    /**
      * Adds a given player to the current game.
      *
      * @param player a PlayerAdapter object identifying a player and its client
      *
+     * @throws NameAlreadyInUseException if the given is already used
+     * @throws ClientAlreadyRegisteredException if the given client-stub is already registered
      * @throws GameRegistryException when something went wrong while registration TODO
      * @throws RemoteException when ??? uhm...yeah when actually ??? TODO
      */
     public void register(PlayerAdapter player)
-            throws GameRegistryException, RemoteException {
+            throws NameAlreadyInUseException, ClientAlreadyRegisteredException, GameRegistryException, RemoteException {
+
         try {
+            if (nameInUse(player.getName())) {
+                throw new NameAlreadyInUseException();
+            }
+            if (clientstubInUse(player.getClientstub())) {
+                throw new ClientAlreadyRegisteredException();
+            }
+
+            //client-stub muss bereits übergeben werden!!!
+
+//            ClientImplementation client = null;
+
+  //          client = (ClientImplementation) Naming.lookup("rmi:/".
+  //                  concat(getClientHost()).concat(":1099/").
+   //                 concat(RMI_CLIENT_SERVICE));
+
             currentGame.addPlayer(player);
             if (currentGame.getNumberOfPlayers() == MAXPLAYERS) {
                 currentGame.startGame();
@@ -113,8 +107,20 @@ public class RegistryServerImplementation extends UnicastRemoteObject
             throw new GameRegistryException(
                     String.format(EX_MSG_GAME_REGISTRY_FAILED,
                     player.getName()));
-        } catch (GameStartException ex) {
+        } catch (ClientAlreadyRegisteredException ex) {
 
+            Logger.getLogger(RegistryServerImplementation.class.getName()).log(Level.SEVERE, null, ex);
+
+            throw new GameRegistryException(
+                    String.format(EX_MSG_GAME_REGISTRY_FAILED,
+                    player.getName()));
+        } catch (ServerNotActiveException ex) {
+            Logger.getLogger(RegistryServerImplementation.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (NotBoundException ex) {
+            Logger.getLogger(RegistryServerImplementation.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(RegistryServerImplementation.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (GameStartException ex) {
             Logger.getLogger(RegistryServerImplementation.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
@@ -306,6 +312,27 @@ public class RegistryServerImplementation extends UnicastRemoteObject
         while (i.hasNext()) {
             pa = (PlayerAdapter) i.next();
             if (pa.getName().equalsIgnoreCase(name)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Looks up, if a player with the same client-stub is already registered
+     *
+     * @param name the nickname that should be checked
+     * @return true if its in use, false if not
+     */
+    private static boolean clientstubInUse(IClient clientstub) {
+        Vector<PlayerAdapter> v = currentGame.getPlayers();
+        PlayerAdapter pa = null;
+        Iterator i = v.iterator();
+
+        while (i.hasNext()) {
+            pa = (PlayerAdapter) i.next();
+            if (pa.getClientstub().equals(clientstub)) {
                 return true;
             }
         }

@@ -20,7 +20,6 @@
 
 package at.technikum.sam.remote.alcatraz.commons;
 
-import at.falb.games.alcatraz.api.Player;
 import java.io.Serializable;
 import java.rmi.Remote;
 
@@ -28,22 +27,26 @@ import java.rmi.Remote;
  *
  * TODO: Comment
  */
-public class PlayerAdapter extends Player implements Serializable, Remote {
+public class PlayerAdapter implements Serializable{
 
+    private String name;
     private IClient clientstub;
 
-    public PlayerAdapter(Player player, IClient clientstub) {
-        super(player);
+    public PlayerAdapter(String name, IClient clientstub) {
+        this.name = name;
         this.clientstub = clientstub;
     }
 
-    public PlayerAdapter(int id, IClient clientstub) {
-        super(id);
-        this.clientstub = clientstub;
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public IClient getClientstub() {
-        return clientstub;
+        return this.clientstub;
     }
 
     public void setClientstub(IClient clientstub) {

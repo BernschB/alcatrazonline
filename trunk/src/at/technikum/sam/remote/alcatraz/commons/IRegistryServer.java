@@ -33,11 +33,9 @@ public interface IRegistryServer extends Remote {
      * Dann würden wir uns das lookup (serverseitig) sparen und eventuell auch
      * die register Methode...
      */
-    PlayerAdapter createPlayer(String name)
-            throws NameAlreadyInUseException, RemoteException;
 
     void register(PlayerAdapter player)
-            throws GameRegistryException, RemoteException;
+            throws NameAlreadyInUseException, ClientAlreadyRegisteredException, GameRegistryException, RemoteException;
 
     void unregister(PlayerAdapter player)
             throws GameRegistryException, RemoteException;
