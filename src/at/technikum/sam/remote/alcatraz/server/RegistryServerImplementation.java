@@ -41,6 +41,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import spread.AdvancedMessageListener;
 import spread.MembershipInfo;
+import spread.SpreadException;
 import spread.SpreadGroup;
 import spread.SpreadMessage;
 
@@ -167,13 +168,17 @@ public class RegistryServerImplementation extends UnicastRemoteObject
      * @param spreadMessage
      */
     public void regularMessageReceived(SpreadMessage spreadMessage) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        Util.printDebug("Regular message received.");
+        try {
+            String input = (String) spreadMessage.getObject();
+            Util.printDebug(input);
+             /**
+             * TODO: Implement Server state synchronisation here
+             */
+        } catch (SpreadException ex) {
+            Logger.getLogger(RegistryServerImplementation.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
-        /* Blabhdhfod */
-
-        /**
-         * TODO: Implement Server state synchronisation here
-         */
     }
 
     /**
