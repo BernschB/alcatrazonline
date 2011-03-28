@@ -1,5 +1,5 @@
 #summary Hier wird die Aufteilung des Projekts in einzelne Pakete beschrieben
-#labels Phase-Design
+#labels Phase-Implementation
 
 = Aufteilung in Pakete (ToDo's) =
 
@@ -18,6 +18,7 @@ Um die Arbeit aufzuteilen werden die Paket weiter zerlegt in folgende Pakte und 
  * *Commons*
    * _#DONE#_ Projekt Setup 
    * _#DONE#_ Interfaces
+     * _#Sebastian#_ Implementierung der geplanten Änderungen am IRegistryServer
    * _#DONE#_ PlayerAdapter Klasse
    * Utility Klasse Grundgerüst (evtl. Logging für Debugging Zwecke)
    * Ressources, Strings, Statics
@@ -25,12 +26,13 @@ Um die Arbeit aufzuteilen werden die Paket weiter zerlegt in folgende Pakte und 
 
   * *Client*
    * ClientImpl Grundgerüst (RMI Managment, Startup, Shutdown, Main)
-   * Client Methode reportNewMaster(...)
-   * Client Methode isAlive()
-   * Client Methode startGame(...)
-   * Client Methode youtTurn()
-   * Client Methode doMove(...)
-   * Integration Client-Server Registrierungsablauf (abhängig von ServerImpl)
+   * _#DONE#_Client Methode reportNewMaster(...)
+   * _#DONE#_Client Methode isAlive()
+   * _#Sebastian#_Client Methode startGame(...)
+   * _#DEPRECATED#_Client Methode youtTurn()
+   * _#Sebastian#_Client Methode doMove(...)
+   * _#Sebastian#_Client Methoden MoveListener
+   * Integration Client-Server Registrierungsablauf (abhängig von ServerImpl) inkl. GUI für die Usereingabe (Namenseingabe und eventueller Force-Start, verbergen der GUI nach Spielstart,...)
 
 
   * *Server*
@@ -48,15 +50,15 @@ Um die Arbeit aufzuteilen werden die Paket weiter zerlegt in folgende Pakte und 
     * Master Failure Detection & ELection
     * Join/Leave Group
    * _#Jürgen#_ Spread Messages versenden (synchronize Game)
-   * _#DONE#_ Spielerregistrierung umbauen
-    * _#DONE#_createPlayer() und register() zu neuer Methode register() zusammenfassen (createPlayer() fliegt raus)
-    * _#DONE#_neue register Signatur: public void register(PlayerAdapter player)
-    * _#DONE#_PlayerAdapter enthält nur mehr IClient Referenz und Playernamen als String, kein Player Objekt mehr
-    * _#DONE#_register macht:
-     * _#DONE#_prüfung ob Playernamen bereits vergeben?
-     * _#DONE#_prüfung ob IClient bereits in der Liste (nur unter anderem Namen)?
-     * _#DONE#_PlayerAdapter zur Liste hinzufügen
-     * _#DONE#_Abschluss mit synchronizeGame() um Game an Spread Gruppe zu verschicken
+   * _#Stefan#_ Spielerregistrierung umbauen
+    * createPlayer() und register() zu neuer Methode register() zusammenfassen (createPlayer() fliegt raus)
+    * neue register Signatur: public void register(PlayerAdapter player)
+    * PlayerAdapter enthält nur mehr IClient Referenz und Playernamen als String, kein Player Objekt mehr
+    * register macht:
+     * prüfung ob Playernamen bereits vergeben?
+     * prüfung ob IClient bereits in der Liste (nur unter anderem Namen)?
+     * PlayerAdapter zur Liste hinzufügen
+     * Abschluss mit synchronizeGame() um Game an Spread Gruppe zu verschicken
 
 
 
