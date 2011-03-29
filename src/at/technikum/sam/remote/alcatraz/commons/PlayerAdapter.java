@@ -21,7 +21,6 @@
 package at.technikum.sam.remote.alcatraz.commons;
 
 import java.io.Serializable;
-import java.rmi.Remote;
 
 /**
  *
