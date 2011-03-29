@@ -87,14 +87,6 @@ public class RegistryServerImplementation extends UnicastRemoteObject
                 throw new ClientAlreadyRegisteredException();
             }
 
-            //client-stub muss bereits übergeben werden!!!
-
-//            ClientImplementation client = null;
-
-  //          client = (ClientImplementation) Naming.lookup("rmi:/".
-  //                  concat(getClientHost()).concat(":1099/").
-   //                 concat(RMI_CLIENT_SERVICE));
-
             currentGame.addPlayer(player);
             if (currentGame.getNumberOfPlayers() == MAXPLAYERS) {
                 currentGame.startGame();
@@ -114,12 +106,6 @@ public class RegistryServerImplementation extends UnicastRemoteObject
             throw new GameRegistryException(
                     String.format(EX_MSG_GAME_REGISTRY_FAILED,
                     player.getName()));
-        } catch (ServerNotActiveException ex) {
-            Logger.getLogger(RegistryServerImplementation.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (NotBoundException ex) {
-            Logger.getLogger(RegistryServerImplementation.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(RegistryServerImplementation.class.getName()).log(Level.SEVERE, null, ex);
         } catch (GameStartException ex) {
             Logger.getLogger(RegistryServerImplementation.class.getName()).log(Level.SEVERE, null, ex);
         }

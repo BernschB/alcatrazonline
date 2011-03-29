@@ -47,6 +47,7 @@ public class ClientImplementation extends UnicastRemoteObject implements IClient
     private String masterServerUrl;
     private int masterServerPort;
     private Alcatraz game;
+    private Player player;
     private PlayerAdapter myPlayer;
     private PlayerAdapter nextPlayer;
     private IRegistryServer masterServer;
@@ -59,6 +60,8 @@ public class ClientImplementation extends UnicastRemoteObject implements IClient
         this.masterServerUrl = host;
         this.masterServerPort = port;
         this.game = new Alcatraz();
+        this.player = new Player(0);
+
         
         try {
             this.lookupMaster();
@@ -135,6 +138,10 @@ public class ClientImplementation extends UnicastRemoteObject implements IClient
 
     public void playerAbsent(PlayerAdapter player) throws RemoteException {
         throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public int getPlayerId() throws RemoteException {
+
     }
     // </editor-fold>
 
@@ -216,7 +223,6 @@ public class ClientImplementation extends UnicastRemoteObject implements IClient
     public void gameWon(Player player) {
         throw new UnsupportedOperationException("Not supported yet.");
     }
-   
 
      // </editor-fold>
 

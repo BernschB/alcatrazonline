@@ -60,7 +60,7 @@ public class Game implements Serializable, Constants {
      * @throws NameAlreadyInUseException if a players name equals another players name
      */
     public boolean addPlayer(PlayerAdapter player) 
-            throws GameRegistryException, NameAlreadyInUseException {
+            throws GameRegistryException, NameAlreadyInUseException, RemoteException {
 
         if(player == null) {
             throw new NullPointerException();
@@ -73,17 +73,17 @@ public class Game implements Serializable, Constants {
         }
 
         for(PlayerAdapter temp : players) {
-            if(temp.getId() == player.getId()) {
+            if(temp.getName().equals(player.getName())) {
+                throw new NameAlreadyInUseException();
+            }
+            if(temp.getClientstub().equals(player.getClientstub())) {
                 /** If the Player is already registered, nothing happens, but
                  *  false is returned
                  */
                 return false;
             }
-            if(temp.getName().equals(player.getName())) {
-                throw new NameAlreadyInUseException();
-            }
         }
-
+        
         return this.players.add(player);
     }
 
@@ -163,8 +163,8 @@ public class Game implements Serializable, Constants {
             p = (PlayerAdapter) i.next();
             /* Rearrange Player Id's from 0 to 3 */
             newid++;
-            p.setId(newid);
-            /* start Game on client implementation */
+            p.getClientstub().setPlayerId(newid);
+            /* strt Game on client implementation */
             p.getClientstub().startGame(this.getPlayers());
         }
 

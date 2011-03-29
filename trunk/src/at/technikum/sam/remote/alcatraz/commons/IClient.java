@@ -62,4 +62,7 @@ public interface IClient extends Remote {
     void playerAbsent(PlayerAdapter player)
             throws RemoteException;
 
+    void setPlayerId(int id)
+            throws RemoteException;
+
 }

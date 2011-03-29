@@ -1,2 +1,2 @@
 #!/bin/sh
-spread -c ./spread.conf
+spread -c ./spread.conf -n host1
