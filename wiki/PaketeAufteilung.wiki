@@ -37,7 +37,8 @@ Um die Arbeit aufzuteilen werden die Paket weiter zerlegt in folgende Pakte und 
 
   * *Server*
    * _#Jürgen#_ ServerImpl Grundgerüst (RMI, Spread, Startup, etc...)
-   * _#DONE#_ RegistryState Klasse (um den Server-State in eine Spread Message verpacken zu können)
+   * _#DONE#_ RegistryState Klasse (Game Klasse am Server)
+    * _#DONE#_ Game.toString()
    * Spread Group Opening?
    * _#DONE#_ Server Methode createPlayer(...)
    * _#DONE#_ Server Methode register(...) & unregister(...)
@@ -49,7 +50,7 @@ Um die Arbeit aufzuteilen werden die Paket weiter zerlegt in folgende Pakte und 
     * Server Synchronisation
     * Master Failure Detection & ELection
     * Join/Leave Group
-   * _#Jürgen#_ Spread Messages versenden (synchronize Game)
+   * _#DONE#_ Spread Messages versenden (synchronize Game)
    * _#DONE#_ Spielerregistrierung umbauen
     * _#DONE#_ createPlayer() und register() zu neuer Methode register() zusammenfassen (createPlayer() fliegt raus)
     * _#DONE#_ neue register Signatur: public void register(PlayerAdapter player)
