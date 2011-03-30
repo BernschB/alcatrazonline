@@ -117,24 +117,27 @@ public class ClientImplementation extends UnicastRemoteObject implements IClient
     public boolean startGame(List<PlayerAdapter> players) throws GameStartException, RemoteException {
         this.thePlayers = players;
 
-        ListIterator<PlayerAdapter> playerIter = players.listIterator();
-        while(playerIter.hasNext()) {
-            PlayerAdapter next = playerIter.next();
+        
+       for(ListIterator<PlayerAdapter> it = players.listIterator(); it.hasNext(); ) {
+            PlayerAdapter next = it.next();
             if(next.getClientstub().equals(this)) {
                 this.myPlayer = next;
-                if(playerIter.hasNext()){
-                    this.nextPlayer = playerIter.next();
+                this.game.init(players.size(), it.previousIndex());
+
+                if(it.hasNext()){
+                    this.nextPlayer = it.next();
                     break;
                 } else {
                     this.nextPlayer = players.get(0);
                 }
-            }
+           }
+
         }
 
-        this.game.init(players.size(), myPlayer.getId());
+       
 
-        for(PlayerAdapter player : players) {
-            this.game.getPlayer(player.getId()).setName(player.getName());
+        for(ListIterator<PlayerAdapter> it = players.listIterator(); it.hasNext(); ) {
+            this.game.getPlayer(it.nextIndex()).setName(it.next().getName());
         }
 
         this.game.addMoveListener(this);
@@ -159,9 +162,7 @@ public class ClientImplementation extends UnicastRemoteObject implements IClient
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public int getPlayerId() throws RemoteException {
-
-    }
+    
     // </editor-fold>
 
 
