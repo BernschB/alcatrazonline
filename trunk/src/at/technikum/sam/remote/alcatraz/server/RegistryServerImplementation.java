@@ -30,11 +30,7 @@ import at.technikum.sam.remote.alcatraz.commons.PlayerAdapter;
 import at.technikum.sam.remote.alcatraz.commons.Constants;
 import at.technikum.sam.remote.alcatraz.commons.Util;
 import java.io.Serializable;
-import java.net.MalformedURLException;
-import java.rmi.Naming;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.server.ServerNotActiveException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.Iterator;
 import java.util.Vector;
@@ -149,7 +145,16 @@ public class RegistryServerImplementation extends UnicastRemoteObject
     public void regularMessageReceived(SpreadMessage spreadMessage) {
         Util.printDebug("Regular message received.");
         try {
-            String input = (String) spreadMessage.getObject();
+            Object o = spreadMessage.getObject();
+            String input = "";
+            if(o instanceof Game) {
+               input = ((Game) o).toString();
+            } else if(o instanceof String) {
+               input = (String) o;
+            } else {
+                input = o.toString();
+            }
+
             Util.printDebug(input);
              /**
              * TODO: Implement Server state synchronisation here

@@ -28,7 +28,7 @@ public final class Util implements Constants {
     private final static boolean DEBUG = true;
 
 
-    private static int playerSequencer = -1;
+    private static int sequencer = -1;
 
     private Util() {
 
@@ -45,9 +45,12 @@ public final class Util implements Constants {
         }
     }
 
-    public static int getNewPlayerId() {
-        playerSequencer++;
-
-        return (playerSequencer - 1) % MAXPLAYERS;
+    /**
+     * Returns increasing int values at every call beginning with 0
+     *
+     * @return An int value sequence
+     */
+    public static int getSequence() {
+        return sequencer++;
     }
 }

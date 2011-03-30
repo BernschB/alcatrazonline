@@ -48,7 +48,6 @@ public class Game implements Serializable, Constants {
          * so that no resizing has to be performed.
          */
         players = new Vector<PlayerAdapter>(MAXPLAYERS);
-        sequencer = -1;
     }
 
     /**
@@ -83,7 +82,6 @@ public class Game implements Serializable, Constants {
                 return false;
             }
         }
-        
         return this.players.add(player);
     }
 
@@ -123,7 +121,6 @@ public class Game implements Serializable, Constants {
      */
     public void Reset() {
         this.players.clear();
-        sequencer = -1;
     }
 
     /**
@@ -136,19 +133,6 @@ public class Game implements Serializable, Constants {
         return this.players.contains(player);
     }
 
-    /** TODO: Player ID Sequencing is not aware of aborted games and its 
-     * players. ID Collissions possible after aborting (resetting) a game
-     */
-    /**
-     * Helper function to sequence playerID's and reset the sequencer
-     * if a game started
-     *
-     * @return A number which isn't used as player ID in the current Game.
-     */
-    public static int getNewPlayerId() {
-        return sequencer++;
-    }
-
     /**
      * TODO: comment
      * @throws GameStartException
@@ -156,7 +140,7 @@ public class Game implements Serializable, Constants {
      */
     public void startGame() throws GameStartException, RemoteException {
         PlayerAdapter p = null;
-        Iterator i = this.getPlayers().iterator();
+        Iterator i = this.players.iterator();
         int newid = -1;
 
         while (i.hasNext()) {
@@ -169,5 +153,31 @@ public class Game implements Serializable, Constants {
         }
 
         this.Reset();
+    }
+
+    /**
+     * Returns a string representation of this class
+     *
+     * @return a readable string representing this class
+     */
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        Iterator i = this.players.iterator();
+        PlayerAdapter p = null;
+        
+
+        sb.append("Current Game has ");
+        sb.append(this.getNumberOfPlayers());
+        sb.append(" players registered:\n");
+
+        while (i.hasNext()) {
+            p = (PlayerAdapter) i.next();
+
+            sb.append("  ");
+            sb.append(p.getName());
+            sb.append("\n");
+        }
+        return sb.toString();
     }
 }
