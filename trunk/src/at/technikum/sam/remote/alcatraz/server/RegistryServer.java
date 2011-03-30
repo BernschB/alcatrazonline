@@ -45,6 +45,7 @@ public class RegistryServer implements Constants {
   private SpreadGroup group;
 
   public static void main(String[] args) {
+      System.setProperty("java.rmi.server.hostname", "10.201.93.184");
     new RegistryServer();
   }
 
@@ -68,6 +69,10 @@ public class RegistryServer implements Constants {
 
         /* Add AdvancedMessageListener Implementation to this Spread connection */
         connection.add(r);
+
+        /* Auto join group */
+        group = new SpreadGroup();
+        group.join(connection, SPREAD_SERVER_GROUP_NAME);
       } catch (SpreadException e) {
         System.err.println("There was an error connecting to the daemon.");
         e.printStackTrace();
@@ -97,7 +102,7 @@ public class RegistryServer implements Constants {
         } else if (buffer[0]=='m'){
             SpreadMessage message = new SpreadMessage();
             //message.addGroup(group);
-            message.setObject("Teststing Multicast");
+            message.setObject(new String("Testing Multicast"));
             connection.multicast(message);
         } else if (buffer[0]=='q') {
             group.leave();

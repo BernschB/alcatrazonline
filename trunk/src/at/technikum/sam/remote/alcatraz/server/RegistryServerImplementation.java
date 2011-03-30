@@ -129,7 +129,12 @@ public class RegistryServerImplementation extends UnicastRemoteObject
             Object o = spreadMessage.getObject();
             String input = "";
             if(o instanceof Game) {
-               input = ((Game) o).toString();
+                /** TODO: Game is simply overwritten at sync
+                 * if this is a slave, don't care about it
+                 * if you use multiple masters, nightmares about race conditions!!!
+                 */
+                currentGame = (Game) o;
+               input = currentGame.toString();
             } else if(o instanceof String) {
                input = (String) o;
             } else {
