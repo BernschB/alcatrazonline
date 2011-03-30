@@ -30,7 +30,7 @@ public class GameClient {
           ex.printStackTrace();
       }
 
-      myPlayer = new PlayerAdapter("bob", myClient);
+      myPlayer = new PlayerAdapter("sarah", myClient);
 
 
       try {
@@ -48,6 +48,15 @@ public class GameClient {
                 concat(myPlayer.getName()).
                 concat(" is registered with server")
                 );
+
+      try {
+        myClient.getMasterServer().forceStart(myPlayer);
+      } catch (Exception ex) {
+          ex.printStackTrace();
+      }
+
+
+      
 
 
   }

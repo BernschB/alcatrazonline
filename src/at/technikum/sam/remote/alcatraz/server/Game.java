@@ -19,6 +19,7 @@
  **/
 package at.technikum.sam.remote.alcatraz.server;
 
+import at.technikum.sam.remote.alcatraz.commons.ClientAlreadyRegisteredException;
 import at.technikum.sam.remote.alcatraz.commons.Constants;
 import at.technikum.sam.remote.alcatraz.commons.GameRegistryException;
 import at.technikum.sam.remote.alcatraz.commons.GameStartException;
@@ -58,8 +59,8 @@ public class Game implements Serializable, Constants {
      * @throws GameRegistryException if a maximum number of players is reached
      * @throws NameAlreadyInUseException if a players name equals another players name
      */
-    public boolean addPlayer(PlayerAdapter player) 
-            throws GameRegistryException, NameAlreadyInUseException, RemoteException {
+    public void addPlayer(PlayerAdapter player)
+            throws GameRegistryException, NameAlreadyInUseException, ClientAlreadyRegisteredException, RemoteException {
 
         if(player == null) {
             throw new NullPointerException();
@@ -76,13 +77,11 @@ public class Game implements Serializable, Constants {
                 throw new NameAlreadyInUseException();
             }
             if(temp.getClientstub().equals(player.getClientstub())) {
-                /** If the Player is already registered, nothing happens, but
-                 *  false is returned
-                 */
-                return false;
+                
+                throw new ClientAlreadyRegisteredException();
             }
         }
-        return this.players.add(player);
+        this.players.add(player);
     }
 
     /**
@@ -139,17 +138,12 @@ public class Game implements Serializable, Constants {
      * @throws RemoteException
      */
     public void startGame() throws GameStartException, RemoteException {
-        PlayerAdapter p = null;
-        Iterator i = this.players.iterator();
-        int newid = -1;
+        
 
-        while (i.hasNext()) {
-            p = (PlayerAdapter) i.next();
-            /* Rearrange Player Id's from 0 to 3 */
-            newid++;
-            p.getClientstub().setPlayerId(newid);
+        for(PlayerAdapter player : this.getPlayers()) {
+         
             /* strt Game on client implementation */
-            p.getClientstub().startGame(this.getPlayers());
+            player.getClientstub().startGame(this.getPlayers());
         }
 
         this.Reset();

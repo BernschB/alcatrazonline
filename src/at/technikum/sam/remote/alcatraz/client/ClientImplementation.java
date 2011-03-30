@@ -244,9 +244,6 @@ public class ClientImplementation extends UnicastRemoteObject implements IClient
         throw new UnsupportedOperationException("Not supported yet.");
     }
 
-    public void setPlayerId(int id) throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
 
      // </editor-fold>
 
