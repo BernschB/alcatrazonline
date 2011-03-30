@@ -30,7 +30,7 @@ public class GameClient {
           ex.printStackTrace();
       }
 
-      myPlayer = new PlayerAdapter("sarah", myClient);
+      myPlayer = new PlayerAdapter("eve", myClient);
 
 
       try {
@@ -50,7 +50,7 @@ public class GameClient {
                 );
 
       try {
-        myClient.getMasterServer().forceStart(myPlayer);
+        //myClient.getMasterServer().forceStart(myPlayer);
       } catch (Exception ex) {
           ex.printStackTrace();
       }
