@@ -47,7 +47,6 @@ public class ClientImplementation extends UnicastRemoteObject implements IClient
     private String masterServerUrl;
     private int masterServerPort;
     private Alcatraz game;
-    private Player player;
     private PlayerAdapter myPlayer;
     private PlayerAdapter nextPlayer;
     private IRegistryServer masterServer;
@@ -60,7 +59,6 @@ public class ClientImplementation extends UnicastRemoteObject implements IClient
         this.masterServerUrl = host;
         this.masterServerPort = port;
         this.game = new Alcatraz();
-        this.player = new Player(0);
 
         
         try {
@@ -78,6 +76,13 @@ public class ClientImplementation extends UnicastRemoteObject implements IClient
 
 
     //<editor-fold defaultstate="collapsed" desc="IClient Implementation">
+    /**
+     * TODO: comment
+     *
+     * @param host
+     * @param port
+     * @throws RemoteException
+     */
     public void reportNewMaster(String host, int port) throws RemoteException {
        if(!masterServerUrl.equals(host) || (masterServerPort != port)) {
            this.masterServerUrl = host;
@@ -91,10 +96,24 @@ public class ClientImplementation extends UnicastRemoteObject implements IClient
        }
     }
 
+    /**
+     * TODO: comment
+     *
+     * @return
+     * @throws RemoteException
+     */
     public boolean isAlive() throws RemoteException {
        return true;
     }
 
+    /**
+     * TODO: comment
+     *
+     * @param players
+     * @return
+     * @throws GameStartException
+     * @throws RemoteException
+     */
     public boolean startGame(List<PlayerAdapter> players) throws GameStartException, RemoteException {
         this.thePlayers = players;
 
@@ -221,6 +240,10 @@ public class ClientImplementation extends UnicastRemoteObject implements IClient
     }
 
     public void gameWon(Player player) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
+
+    public void setPlayerId(int id) throws RemoteException {
         throw new UnsupportedOperationException("Not supported yet.");
     }
 

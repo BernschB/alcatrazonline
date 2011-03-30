@@ -5,6 +5,7 @@
 
 package at.technikum.sam.remote.alcatraz.client;
 
+import at.falb.games.alcatraz.api.Player;
 import at.technikum.sam.remote.alcatraz.commons.GameRegistryException;
 import at.technikum.sam.remote.alcatraz.commons.NameAlreadyInUseException;
 import at.technikum.sam.remote.alcatraz.commons.PlayerAdapter;
@@ -21,9 +22,11 @@ public class GameClient {
   
   private static ClientImplementation myClient = null;
   private static PlayerAdapter myPlayer = null;
+  private static Player player = null;
 
   public static void main(String[] args) {
 
+      String Name = "Bob";
 
       try {
           myClient = new ClientImplementation(HOST, PORT);
@@ -34,7 +37,7 @@ public class GameClient {
 
 
       try {
-          myPlayer = myClient.getMasterServer().createPlayer("Bob");
+          myPlayer = myClient.getMasterServer().register(myPlayer)
       } catch (NameAlreadyInUseException ex) {
           ex.printStackTrace();
       } catch (RemoteException ex) {
