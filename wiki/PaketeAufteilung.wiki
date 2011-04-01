@@ -32,7 +32,7 @@ Um die Arbeit aufzuteilen werden die Paket weiter zerlegt in folgende Pakte und 
    * _#DEPRECATED#_Client Methode youtTurn()
    * _#Sebastian#_Client Methode doMove(...)
    * _#Sebastian#_Client Methoden MoveListener
-   * Integration Client-Server Registrierungsablauf (abhängig von ServerImpl) inkl. GUI für die Usereingabe (Namenseingabe und eventueller Force-Start, verbergen der GUI nach Spielstart,...)
+   * _#Stefan#_Integration Client-Server Registrierungsablauf (abhängig von ServerImpl) inkl. GUI für die Usereingabe (Namenseingabe und eventueller Force-Start, verbergen der GUI nach Spielstart,...)
 
 
   * *Server*
