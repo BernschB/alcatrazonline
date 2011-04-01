@@ -70,7 +70,14 @@ public class RegistryServerImplementation extends UnicastRemoteObject
      */
     public void register(PlayerAdapter player)
             throws NameAlreadyInUseException, ClientAlreadyRegisteredException, GameRegistryException, RemoteException {
-
+        try {
+            player.getClientstub().isAlive();
+        } catch (RemoteException ex) {
+            Logger.getLogger(RegistryServerImplementation.class.getName()).log(Level.SEVERE, null, ex);
+            throw ex;
+        }
+        Util.printDebug("Player ".concat(player.getName()).concat(" is alive"));
+        
         try {
             currentGame.addPlayer(player);
             if (currentGame.getNumberOfPlayers() == MAXPLAYERS) {
@@ -86,6 +93,7 @@ public class RegistryServerImplementation extends UnicastRemoteObject
         } catch (GameStartException ex) {
             Logger.getLogger(RegistryServerImplementation.class.getName()).log(Level.SEVERE, null, ex);
         }
+
     }
 
     /**
@@ -109,7 +117,7 @@ public class RegistryServerImplementation extends UnicastRemoteObject
      */
     public void forceStart(PlayerAdapter player)
             throws GameStartException, RemoteException {
-        if (currentGame.hasPlayer(player) && currentGame.getNumberOfPlayers() > 1) {
+        if (currentGame.getNumberOfPlayers() > 1) {
             currentGame.startGame();
             this.synchronizeGame();
         } else {
