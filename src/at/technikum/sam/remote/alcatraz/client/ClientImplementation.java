@@ -29,6 +29,7 @@ import at.technikum.sam.remote.alcatraz.commons.IClient;
 import at.technikum.sam.remote.alcatraz.commons.Constants;
 import at.technikum.sam.remote.alcatraz.commons.IRegistryServer;
 import at.technikum.sam.remote.alcatraz.commons.PlayerAdapter;
+import at.technikum.sam.remote.alcatraz.commons.Util;
 import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
@@ -42,7 +43,7 @@ import java.util.ListIterator;
  *
  * TODO: Comment
  */
-public class ClientImplementation extends UnicastRemoteObject implements IClient, Serializable, MoveListener {
+public class ClientImplementation implements IClient, MoveListener {
 
     private String masterServerUrl;
     private int masterServerPort;
@@ -51,26 +52,22 @@ public class ClientImplementation extends UnicastRemoteObject implements IClient
     private PlayerAdapter nextPlayer;
     private IRegistryServer masterServer;
     private List<PlayerAdapter> thePlayers = null;;
+    private GameStartedListener listener;
 
 
-    public ClientImplementation (String host, int port)
-            throws RemoteException, NotBoundException, MalformedURLException {
+    public ClientImplementation () {
         super();
+    }
+
+    public void init (String host, int port, PlayerAdapter myPlayer)
+            throws RemoteException, NotBoundException, MalformedURLException {
         this.masterServerUrl = host;
         this.masterServerPort = port;
         this.game = new Alcatraz();
+        this.myPlayer = myPlayer;
 
+        this.lookupMaster();
         
-        try {
-            this.lookupMaster();
-        } catch (MalformedURLException ex) {
-            throw ex;
-        } catch (NotBoundException ex) {
-            throw ex;
-        } catch (RemoteException ex) {
-            throw ex;
-        }
-
     }
 
 
@@ -117,33 +114,49 @@ public class ClientImplementation extends UnicastRemoteObject implements IClient
     public boolean startGame(List<PlayerAdapter> players) throws GameStartException, RemoteException {
         this.thePlayers = players;
 
+      boolean myClientFoundFlag = false;
+
+      for(PlayerAdapter player : players) {
+          try {
+            player.getClientstub().isAlive();
+          } catch (Exception ex) {
+              ex.printStackTrace();
+              throw new RemoteException();
+          }        
+          
+      }
+
+
         
        for(ListIterator<PlayerAdapter> it = players.listIterator(); it.hasNext(); ) {
             PlayerAdapter next = it.next();
-            if(next.getClientstub().equals(this)) {
-                this.myPlayer = next;
+            if(next.getName().equals(this.myPlayer.getName())) {
+                
                 this.game.init(players.size(), it.previousIndex());
 
                 if(it.hasNext()){
                     this.nextPlayer = it.next();
-                    break;
                 } else {
                     this.nextPlayer = players.get(0);
                 }
+                myClientFoundFlag = true;
+                break;
            }
 
         }
 
-       
+        if(!myClientFoundFlag) {
+            throw new GameStartException();
+        }
 
         for(ListIterator<PlayerAdapter> it = players.listIterator(); it.hasNext(); ) {
             this.game.getPlayer(it.nextIndex()).setName(it.next().getName());
         }
 
         this.game.addMoveListener(this);
-
         this.game.start();
-        this.game.showWindow();
+
+        this.listener.gameStarted(game);
 
         return true;
     }
@@ -171,6 +184,10 @@ public class ClientImplementation extends UnicastRemoteObject implements IClient
 
     public IRegistryServer getMasterServer () {
         return this.masterServer;
+    }
+
+    public void installListener (GameStartedListener listener) {
+        this.listener = listener;
     }
 
     // </editor-fold>

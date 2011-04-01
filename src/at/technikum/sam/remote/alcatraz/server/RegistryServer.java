@@ -45,7 +45,7 @@ public class RegistryServer implements Constants {
   private SpreadGroup group;
 
   public static void main(String[] args) {
-      System.setProperty("java.rmi.server.hostname", "10.201.93.184");
+      System.setProperty("java.rmi.server.hostname", "10.0.0.6");
     new RegistryServer();
   }
 
