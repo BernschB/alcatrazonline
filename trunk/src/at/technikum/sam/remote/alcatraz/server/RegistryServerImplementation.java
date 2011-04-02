@@ -71,7 +71,7 @@ public class RegistryServerImplementation extends UnicastRemoteObject
     public void register(PlayerAdapter player)
             throws NameAlreadyInUseException, ClientAlreadyRegisteredException, GameRegistryException, RemoteException {
         try {
-            player.getClientstub().isAlive();
+            player.getClientstub().debugIsAlive("Server register()");
         } catch (RemoteException ex) {
             Logger.getLogger(RegistryServerImplementation.class.getName()).log(Level.SEVERE, null, ex);
             throw ex;
