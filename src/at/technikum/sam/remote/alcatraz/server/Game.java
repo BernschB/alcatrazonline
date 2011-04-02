@@ -27,8 +27,9 @@ import at.technikum.sam.remote.alcatraz.commons.NameAlreadyInUseException;
 import at.technikum.sam.remote.alcatraz.commons.PlayerAdapter;
 import java.io.Serializable;
 import java.rmi.RemoteException;
-import java.util.Iterator;
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /* TODO: check if synchronizing Singletons is possible ???
         Answer: No, its at least not recommended */
@@ -38,7 +39,8 @@ import java.util.Vector;
  */
 public class Game implements Serializable, Constants {
 
-    private Vector<PlayerAdapter> players;
+    //TODO: Vector is an obsolete Collection according to api-docu it should not be used
+    private List<PlayerAdapter> players;
     private static int sequencer = -1;
     /**
      * Constructor of GameRegistry
@@ -47,8 +49,18 @@ public class Game implements Serializable, Constants {
         /*
          * Init Vector with size of MAXPLAYERS,
          * so that no resizing has to be performed.
+         * 
+         * TODO:
+         * Do we really need thread-safe Lists here?
+         * Thread-Safe list are only needed when  "one of the threads
+         * modifies the list >>structurally<<, (A structural modification is any
+         * operation that adds or deletes one or more elements, or explicitly
+         * resizes the backing array; merely >>>setting the value<<< of an
+         * element is >>>not<<< a structural modification.)"
+         * see also: http://download.oracle.com/javase/6/docs/api/java/util/ArrayList.html
          */
-        players = new Vector<PlayerAdapter>(MAXPLAYERS);
+        this.players = Collections.synchronizedList(new ArrayList<PlayerAdapter>(MAXPLAYERS));
+        
     }
 
     /**
@@ -108,7 +120,7 @@ public class Game implements Serializable, Constants {
      *
      * @return the player list
      */
-    public Vector<PlayerAdapter> getPlayers() {
+    public List<PlayerAdapter> getPlayers() {
         return this.players;
     }
 
@@ -139,11 +151,13 @@ public class Game implements Serializable, Constants {
      */
     public void startGame() throws GameStartException, RemoteException {
         
+        List<PlayerAdapter> playerList = this.getPlayers();
 
         for(PlayerAdapter player : this.getPlayers()) {
-         
-            /* strt Game on client implementation */
-            player.getClientstub().startGame(this.getPlayers());
+            player.getClientstub().debugIsAlive("Server startGame()");
+            /* start Game on client implementation */
+            player.getClientstub().startGame(playerList);
+
         }
 
         this.Reset();
@@ -157,21 +171,17 @@ public class Game implements Serializable, Constants {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        Iterator i = this.players.iterator();
-        PlayerAdapter p = null;
-        
 
         sb.append("Current Game has ");
         sb.append(this.getNumberOfPlayers());
         sb.append(" players registered:\n");
 
-        while (i.hasNext()) {
-            p = (PlayerAdapter) i.next();
-
+        for(PlayerAdapter player : this.players) {
             sb.append("  ");
-            sb.append(p.getName());
+            sb.append(player.getName());
             sb.append("\n");
         }
+
         return sb.toString();
     }
 }

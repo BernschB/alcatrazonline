@@ -35,6 +35,14 @@ public interface IClient extends Remote {
     void reportNewMaster(String host, int port)
             throws RemoteException;
 
+    /*
+     * TODO: DEBUG - remote-method used only or debug purposes remove when finished
+     * When needed replace whith calls to isAlive() before deploying
+     */
+
+    void debugIsAlive(String callerName)
+            throws RemoteException;
+
 
     boolean isAlive()
             throws RemoteException;

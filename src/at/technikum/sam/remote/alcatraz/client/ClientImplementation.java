@@ -30,12 +30,10 @@ import at.technikum.sam.remote.alcatraz.commons.Constants;
 import at.technikum.sam.remote.alcatraz.commons.IRegistryServer;
 import at.technikum.sam.remote.alcatraz.commons.PlayerAdapter;
 import at.technikum.sam.remote.alcatraz.commons.Util;
-import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -80,6 +78,7 @@ public class ClientImplementation implements IClient, MoveListener {
      * @param port
      * @throws RemoteException
      */
+
     public void reportNewMaster(String host, int port) throws RemoteException {
        if(!masterServerUrl.equals(host) || (masterServerPort != port)) {
            this.masterServerUrl = host;
@@ -100,8 +99,19 @@ public class ClientImplementation implements IClient, MoveListener {
      * @throws RemoteException
      */
     public boolean isAlive() throws RemoteException {
+
        return true;
     }
+
+     /*
+     * TODO: DEBUG - remote-method used only or debug purposes remove when finished
+     * When needed replace whith calls to isAlive() before deploying
+     */
+     public void debugIsAlive(String callerName)
+            throws RemoteException {
+         Util.printDebug("Is alive called by ".concat(callerName));
+     }
+
 
     /**
      * TODO: comment
@@ -118,12 +128,11 @@ public class ClientImplementation implements IClient, MoveListener {
 
       for(PlayerAdapter player : players) {
           try {
-            player.getClientstub().isAlive();
+            player.getClientstub().debugIsAlive(this.myPlayer.getName());
           } catch (Exception ex) {
               ex.printStackTrace();
               throw new RemoteException();
-          }        
-          
+          }    
       }
 
 

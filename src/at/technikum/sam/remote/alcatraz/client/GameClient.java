@@ -31,6 +31,7 @@ public class GameClient implements GameStartedListener {
   
   private static ClientImplementation myClient = null;
   private static PlayerAdapter myPlayer = null;
+  private static Alcatraz theGame = null;
 
   public static void main(String[] args) {
 
@@ -38,9 +39,10 @@ public class GameClient implements GameStartedListener {
       String playerName = "";
       IClient clientStub = null;
 
+
       myClient = new ClientImplementation();
 
-      System.out.println("Spielernamen eintregen:");
+      System.out.println("Spielernamen eintragen:");
         try {
             playerName = reader.readLine();
         } catch (IOException ex) {
@@ -100,6 +102,13 @@ public class GameClient implements GameStartedListener {
 
       theLoop();
 
+      if (theGame != null) {
+          theGame.showWindow();
+      } else {
+          System.exit(-1);
+
+      }
+
   }
 
   private static void theLoop() {
@@ -140,6 +149,11 @@ public class GameClient implements GameStartedListener {
                     }
                     System.exit(0);
                     break;
+                case 's': //workaround to show game in main()
+                    if (theGame != null) {
+                        return;
+                    }
+                    break;
                 case 'q': //quit
                     System.exit(0);
                     break;
@@ -150,13 +164,13 @@ public class GameClient implements GameStartedListener {
             }
       } while (buffer[0] != 'q');
 
-      System.exit(0);
+      return;
 
   }
 
     public void gameStarted(Alcatraz game) {
         
-        game.showWindow();
+        theGame = game;
     }
 
 
