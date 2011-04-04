@@ -152,15 +152,33 @@ public class ClientImplementation implements IClient, MoveListener {
                 break;
            }
 
-        }
+       }
+       Util.printDebug("Next Player is: ".
+                 concat(this.nextPlayer.getName())
+                 );
 
-        if(!myClientFoundFlag) {
+
+      if(!myClientFoundFlag) {
             throw new GameStartException();
-        }
+       }
 
-        for(ListIterator<PlayerAdapter> it = players.listIterator(); it.hasNext(); ) {
-            this.game.getPlayer(it.nextIndex()).setName(it.next().getName());
-        }
+      int i = 0;
+
+      for(PlayerAdapter player : players) {
+          this.game.getPlayer(i).setName(player.getName());
+          i++;
+      }
+      //TODO: Remove debug
+     while(i > 0) {
+         i--;
+         Util.printDebug("Player with id ".
+                 concat(String.valueOf(i)).
+                 concat(" has the name: ").
+                 concat(this.game.getPlayer(i).getName())
+                 );
+     }
+
+
 
         this.game.addMoveListener(this);
         this.game.start();
@@ -172,7 +190,13 @@ public class ClientImplementation implements IClient, MoveListener {
 
     public void doMove(Player player, Prisoner prisoner, int rowOrCol, int row, int col)
             throws RemoteException {
-        this.game.doMove(player, prisoner, rowOrCol, row, col);
+        this.game.doMove(
+                    this.game.getPlayer(player.getId()),
+                    this.game.getPrisoner(prisoner.getId()),
+                    rowOrCol,
+                    row,
+                    col
+                );
     }
 
 
@@ -228,11 +252,14 @@ public class ClientImplementation implements IClient, MoveListener {
     // <editor-fold defaultstate="collapsed" desc="MoveListener Methods">
 
     public void moveDone(Player player, Prisoner prsnr, int i, int i1, int i2) {
+
         for(PlayerAdapter currentPlayer : this.thePlayers){
-            if(!(currentPlayer.equals(this.myPlayer) || currentPlayer.equals(this.nextPlayer))) {
+            if(!(currentPlayer.getName().equals(this.myPlayer.getName())
+                    || currentPlayer.getName().equals(this.nextPlayer.getName()))) {
+
                 while (true) {
                     try {
-                        currentPlayer.getClientstub().doMove(player, prsnr, i2, i2, i2);
+                        currentPlayer.getClientstub().doMove(player, prsnr, i, i1, i2);
                     } catch (RemoteException ex) {
                         // TODO: Error Handling => playerAbsent
                         try {
@@ -250,7 +277,7 @@ public class ClientImplementation implements IClient, MoveListener {
 
         while (true) {
             try {
-                this.nextPlayer.getClientstub().doMove(player, prsnr, i2, i2, i2);
+                this.nextPlayer.getClientstub().doMove(player, prsnr, i, i1, i2);
             } catch (RemoteException ex) {
                 // TODO: Error Handling => playerAbsent
                 try {
