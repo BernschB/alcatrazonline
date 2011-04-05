@@ -139,7 +139,7 @@ public class ClientImplementation implements IClient, MoveListener {
         
        for(ListIterator<PlayerAdapter> it = players.listIterator(); it.hasNext(); ) {
             PlayerAdapter next = it.next();
-            if(next.getName().equals(this.myPlayer.getName())) {
+            if(next.equals(this.myPlayer)) {
                 
                 this.game.init(players.size(), it.previousIndex());
 
@@ -254,8 +254,8 @@ public class ClientImplementation implements IClient, MoveListener {
     public void moveDone(Player player, Prisoner prsnr, int i, int i1, int i2) {
 
         for(PlayerAdapter currentPlayer : this.thePlayers){
-            if(!(currentPlayer.getName().equals(this.myPlayer.getName())
-                    || currentPlayer.getName().equals(this.nextPlayer.getName()))) {
+            if(!(currentPlayer.equals(this.myPlayer)
+                 || (currentPlayer.equals(this.nextPlayer)) )) {
 
                 while (true) {
                     try {
