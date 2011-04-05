@@ -51,5 +51,25 @@ public class PlayerAdapter implements Serializable{
     public void setClientstub(IClient clientstub) {
         this.clientstub = clientstub;
     }
+
+    @Override
+    public boolean equals(Object o) {
+
+        if(!o.getClass().equals(this.getClass())){
+            return false;
+        }
+        if(o.hashCode() != this.hashCode()) {
+            return false;
+        }
+        return true;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int hash = 3;
+        hash = 89 * hash + (this.name != null ? this.name.hashCode() : 0);
+        return hash;
+    }
     
 }
