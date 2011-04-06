@@ -40,12 +40,12 @@ import spread.SpreadMessage;
  */
 public class RegistryServer implements Constants {
 
-  private static String spreadHost = "localhost";
+  private static String host = "localhost";
   private static SpreadConnection connection;
   private SpreadGroup group;
 
   public static void main(String[] args) {
-      System.setProperty("java.rmi.server.hostname", "10.0.0.6");
+      //System.setProperty("java.rmi.server.hostname", "10.201.93.184");
     new RegistryServer();
   }
 
@@ -53,6 +53,10 @@ public class RegistryServer implements Constants {
     try {
       /*System.out.println("Starting up Spread Daemon...");
       this.startSpread();*/
+      host = Util.getProperty(CONF_REGISTRYSERVERHOSTNAME);
+      System.out.println("Initializing Server on Host: "
+              .concat(host)
+              .concat("..."));
 
       System.out.println("Starting up Registry Server instance...");
       RegistryServerImplementation r = new RegistryServerImplementation();
@@ -61,9 +65,9 @@ public class RegistryServer implements Constants {
       try {
         /* Connect to local spread daemon and get spread group */
         connection = new SpreadConnection();
-        connection.connect(InetAddress.getByName(spreadHost),
+        connection.connect(InetAddress.getByName(host),
                 0,
-                SPREAD_SERVER_GROUP_NAME,
+                Util.getProperty(CONF_PRIVATESPREADGROUP),
                 true,
                 true);
 
@@ -78,13 +82,16 @@ public class RegistryServer implements Constants {
         e.printStackTrace();
         System.exit(1);
       } catch (UnknownHostException e) {
-        System.err.println("Can't find the spread daemon on" + spreadHost);
+        System.err.println("Can't find the spread daemon on" + host);
         System.exit(1);
       }
 
       System.out.println("Creating RMI Registry...");
       java.rmi.registry.LocateRegistry.createRegistry(1099);
-      Naming.rebind("rmi://localhost:1099/".concat(RMI_SERVER_SERVICE), r);
+      Naming.rebind("rmi://"
+              .concat(host)
+              .concat(":1099/")
+              .concat(RMI_SERVER_SERVICE), r);
       System.out.println("Registry Server up and running. Ready to receive requests...");
     } catch (Exception e) {
       System.out.println("Something went wrong while bringing up server.");

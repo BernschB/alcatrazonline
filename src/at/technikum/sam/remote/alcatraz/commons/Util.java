@@ -19,6 +19,14 @@
  **/
 package at.technikum.sam.remote.alcatraz.commons;
 
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 
 /**
 * Used for generally purpose utility-methods
@@ -26,12 +34,12 @@ package at.technikum.sam.remote.alcatraz.commons;
 public final class Util implements Constants {
 
     private final static boolean DEBUG = true;
-
+    private static Properties properties = null;
 
     private static int sequencer = -1;
 
     private Util() {
-
+        
     }
 
     /**
@@ -43,6 +51,30 @@ public final class Util implements Constants {
         if(DEBUG) {
             System.out.println(message);
         }
+    }
+
+    /**
+     * Returns Configurationparametres from a centralized app.properties file
+     *
+     * @param key the key-string of the property
+     * @return the property value
+     */
+    public static String getProperty(String key) {
+        if(properties == null) {
+            properties = new Properties();
+            BufferedInputStream stream;
+            try {
+                stream = new BufferedInputStream(new FileInputStream("config/app.properties"));
+                properties.load(stream);
+                stream.close();
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(Util.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(Util.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+
+        return properties.getProperty(key);
     }
 
     /**
