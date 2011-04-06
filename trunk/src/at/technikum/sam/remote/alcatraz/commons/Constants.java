@@ -56,4 +56,16 @@ public interface Constants {
      */
     public final static String EX_MSG_GAME_REGISTRY_FAILED
             = "Registration of player {0} failed";
+
+    /**
+     * Property Key for Registry Server Hostname property
+     */
+    public final static String CONF_REGISTRYSERVERHOSTNAME
+            = "RegistryServerHostname";
+
+    /**
+     * Property Key for Private Spread Group property
+     */
+    public final static String CONF_PRIVATESPREADGROUP
+            = "PrivateSpreadGroup";
 }
