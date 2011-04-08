@@ -22,17 +22,18 @@ package at.technikum.sam.remote.alcatraz.server;
 import at.technikum.sam.remote.alcatraz.commons.Constants;
 import at.technikum.sam.remote.alcatraz.commons.Util;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.rmi.Naming;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import spread.SpreadConnection;
 import spread.SpreadException;
 import spread.SpreadGroup;
 import spread.SpreadMessage;
-
 
 /**
  *
@@ -67,7 +68,7 @@ public class RegistryServer implements Constants {
         connection = new SpreadConnection();
         connection.connect(InetAddress.getByName(host),
                 0,
-                Util.getProperty(CONF_PRIVATESPREADGROUP),
+               Util.getProperty(CONF_PRIVATESPREADGROUP),
                 true,
                 true);
 
@@ -97,6 +98,7 @@ public class RegistryServer implements Constants {
       System.out.println("Something went wrong while bringing up server.");
       e.printStackTrace();
     }
+
     byte buffer[] = new byte[80];
     do {
       try {
@@ -106,14 +108,14 @@ public class RegistryServer implements Constants {
           group.join(connection, SPREAD_SERVER_GROUP_NAME);
         } else if (buffer[0] == 'l') {
           group.leave();
-        } else if (buffer[0]=='m'){
-            SpreadMessage message = new SpreadMessage();
-            //message.addGroup(group);
-            message.setObject(new String("Testing Multicast"));
-            connection.multicast(message);
-        } else if (buffer[0]=='q') {
-            group.leave();
-            System.exit(0);
+        } else if (buffer[0] == 'm') {
+          SpreadMessage message = new SpreadMessage();
+          //message.addGroup(group);
+          message.setObject(new String("Testing Multicast"));
+          connection.multicast(message);
+        } else if (buffer[0] == 'q') {
+          group.leave();
+          System.exit(0);
         }
       } catch (Exception e) {
         System.out.println("Something went wrong while bringing up server.");
@@ -123,22 +125,22 @@ public class RegistryServer implements Constants {
   }
 
   public static SpreadConnection getSpreadConnection() {
-      return connection;
+    return connection;
   }
 
   /**
    * TODO: Spread Startup Method... Work in Progress
    */
   private void startSpread() {
-      ProcessBuilder spreadDaemon = new ProcessBuilder("spread -c spread.conf -n host1");
+    ProcessBuilder spreadDaemon = new ProcessBuilder("spread -c spread.conf -n host1");
 
-      spreadDaemon.directory(new File(System.getProperty("user.dir").toString()));
-      Util.printDebug(System.getProperty("user.dir"));
-        try {
-            spreadDaemon.start();
-        } catch (IOException ex) {
-            Logger.getLogger(RegistryServer.class.getName()).log(Level.SEVERE, null, ex);
-            Util.printDebug(ex.toString());
-        }
+    spreadDaemon.directory(new File(System.getProperty("user.dir").toString()));
+    Util.printDebug(System.getProperty("user.dir"));
+    try {
+      spreadDaemon.start();
+    } catch (IOException ex) {
+      Logger.getLogger(RegistryServer.class.getName()).log(Level.SEVERE, null, ex);
+      Util.printDebug(ex.toString());
+    }
   }
 }
