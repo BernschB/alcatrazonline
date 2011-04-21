@@ -26,7 +26,7 @@ import java.util.logging.Logger;
  */
 public class GameClient implements GameStartedListener {
 
-  public final static String HOST = "localhost";
+  public final static String HOST = "10.201.88.58";
   public final static int PORT = 1099;
   
   private static ClientImplementation myClient = null;
