@@ -68,4 +68,39 @@ public interface Constants {
      */
     public final static String CONF_PRIVATESPREADGROUP
             = "PrivateSpreadGroup";
+    
+    /**
+     * Property KEy for Registry Server Por
+     */
+    public final static String CONF_REGISTRYSERVERPORT
+            = "RegistryServerPort";
+    /**
+     * Error Message displayed to the user if Player Name is already in use
+     */
+    public final static String ERR_NAMEINUSE 
+            = "Error: this name is already in use";
+    
+    /**
+     * Error Message displayed to the user if not all Text-Fields are filled out
+     */
+    public final static String ERR_TEXTFIELDEMPTY 
+            = "Error: please fill out all three text fields";
+    
+    /**
+     * Error Message displayed to the user if server could not be reached
+     */
+    public final static String ERR_SERVERNOTREACHED
+            = "Error: could noit reach server";
+    
+     /**
+     * Error Message displayed to the user if an error occurs
+     */
+    public final static String ERR_ERROR
+            = "Error: an error occured - please try again";
+    
+     /**
+     * Error Message displayed to the user if not enough player are registered with the server
+     */
+    public final static String ERR_NOTENOUGHPLAYER
+            = "Error: not enough player registered with server";
 }

@@ -4,43 +4,43 @@
  */
 
 /*
- * GameGUI.java
+ * GameUi.java
  *
- * Created on 21.04.2011, 20:10:33
+ * Created on 27.04.2011, 17:40:10
  */
 package at.technikum.sam.remote.alcatraz.client;
 
 import at.falb.games.alcatraz.api.Alcatraz;
+import at.falb.games.alcatraz.api.Player;
+import at.technikum.sam.remote.alcatraz.commons.ClientAlreadyRegisteredException;
+import at.technikum.sam.remote.alcatraz.commons.Constants;
 import at.technikum.sam.remote.alcatraz.commons.GameRegistryException;
 import at.technikum.sam.remote.alcatraz.commons.GameStartException;
+import at.technikum.sam.remote.alcatraz.commons.IClient;
 import at.technikum.sam.remote.alcatraz.commons.NameAlreadyInUseException;
 import at.technikum.sam.remote.alcatraz.commons.PlayerAdapter;
-import at.technikum.sam.remote.alcatraz.commons.IClient;
 import at.technikum.sam.remote.alcatraz.commons.Util;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
- * @author stefanschramek
+ * @author Sebastian_2
  */
-public class GameGUI extends javax.swing.JFrame implements GameStartedListener {
-    
-    public final static String HOST = null;
-    public final static int PORT = -1;
-  
+public class GameGUI extends javax.swing.JFrame implements Constants, ClientListener {
+
     private static ClientImplementation myClient = null;
     private static PlayerAdapter myPlayer = null;
     private static Alcatraz theGame = null;
 
-    /** Creates new form GameGUI */
+    /** Creates new form GameUi */
     public GameGUI() {
         initComponents();
+        tfServerHostName.setText(Util.getProperty(CONF_REGISTRYSERVERHOSTNAME));
+        tfServerPort.setText(Util.getProperty(CONF_REGISTRYSERVERPORT));
+        pnRegistered.setVisible(false);
+        this.setSize(pnRegisterForm.getSize());
     }
 
     /** This method is called from within the constructor to
@@ -51,182 +51,244 @@ public class GameGUI extends javax.swing.JFrame implements GameStartedListener {
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
-        java.awt.GridBagConstraints gridBagConstraints;
 
-        tfName = new javax.swing.JTextField();
-        tfServer = new javax.swing.JTextField();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList();
-        jCheckBox1 = new javax.swing.JCheckBox();
-        tbRegister = new javax.swing.JToggleButton();
+        pnRegisterForm = new javax.swing.JPanel();
+        lbPlayerName = new javax.swing.JLabel();
+        tfPlayerName = new javax.swing.JTextField();
+        lbServerAddress = new javax.swing.JLabel();
+        tfServerHostName = new javax.swing.JTextField();
+        lbServerPort = new javax.swing.JLabel();
+        tfServerPort = new javax.swing.JTextField();
+        lbRegisterFormError = new javax.swing.JLabel();
+        btRegister = new javax.swing.JButton();
+        pnRegistered = new javax.swing.JPanel();
+        lbRegisterInfo = new javax.swing.JLabel();
+        btForceStart = new javax.swing.JButton();
+        btUnregister = new javax.swing.JButton();
+        lbRegisteredError = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        getContentPane().setLayout(new java.awt.GridBagLayout());
+        setTitle("Alcatraz Registration");
 
-        tfName.setToolTipText("");
-        tfName.setName("null"); // NOI18N
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.ipadx = 70;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        getContentPane().add(tfName, gridBagConstraints);
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.ipadx = 70;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        getContentPane().add(tfServer, gridBagConstraints);
+        pnRegisterForm.setPreferredSize(new java.awt.Dimension(400, 200));
 
-        jLabel1.setText("Spielername:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        getContentPane().add(jLabel1, gridBagConstraints);
+        lbPlayerName.setText("Player Name");
 
-        jLabel2.setText("Server:");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.EAST;
-        getContentPane().add(jLabel2, gridBagConstraints);
+        lbServerAddress.setText("Server Host Name");
 
-        jList1.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
-        });
-        jList1.setMaximumSize(new java.awt.Dimension(20, 40));
-        jList1.setMinimumSize(new java.awt.Dimension(20, 40));
-        jList1.setPreferredSize(new java.awt.Dimension(20, 40));
-        jList1.setSize(new java.awt.Dimension(20, 40));
-        jScrollPane1.setViewportView(jList1);
+        lbServerPort.setText("Server Port");
 
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 4;
-        gridBagConstraints.gridwidth = 5;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.ipadx = 20;
-        gridBagConstraints.ipady = 117;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        getContentPane().add(jScrollPane1, gridBagConstraints);
+        lbRegisterFormError.setFont(new java.awt.Font("Tahoma", 1, 14));
+        lbRegisterFormError.setForeground(new java.awt.Color(255, 0, 0));
 
-        jCheckBox1.setText("Force Start");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 5;
-        gridBagConstraints.gridwidth = 4;
-        gridBagConstraints.anchor = java.awt.GridBagConstraints.WEST;
-        getContentPane().add(jCheckBox1, gridBagConstraints);
-
-        tbRegister.setText("Register");
-        tbRegister.addActionListener(new java.awt.event.ActionListener() {
+        btRegister.setText("Register");
+        btRegister.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                tbRegisterActionPerformed(evt);
+                btRegisterActionPerformed(evt);
             }
         });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 4;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridheight = 2;
-        getContentPane().add(tbRegister, gridBagConstraints);
+
+        javax.swing.GroupLayout pnRegisterFormLayout = new javax.swing.GroupLayout(pnRegisterForm);
+        pnRegisterForm.setLayout(pnRegisterFormLayout);
+        pnRegisterFormLayout.setHorizontalGroup(
+            pnRegisterFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnRegisterFormLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnRegisterFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbPlayerName, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(pnRegisterFormLayout.createSequentialGroup()
+                        .addGroup(pnRegisterFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lbServerPort, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(lbServerAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(pnRegisterFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(tfPlayerName, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tfServerHostName, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(tfServerPort, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 106, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(lbRegisterFormError, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        pnRegisterFormLayout.setVerticalGroup(
+            pnRegisterFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnRegisterFormLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnRegisterFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnRegisterFormLayout.createSequentialGroup()
+                        .addComponent(lbPlayerName, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lbServerAddress, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnRegisterFormLayout.createSequentialGroup()
+                        .addComponent(tfPlayerName, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(tfServerHostName, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(pnRegisterFormLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(tfServerPort, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lbServerPort, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btRegister)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lbRegisterFormError, javax.swing.GroupLayout.PREFERRED_SIZE, 19, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(54, Short.MAX_VALUE))
+        );
+
+        getContentPane().add(pnRegisterForm, java.awt.BorderLayout.NORTH);
+
+        pnRegistered.setPreferredSize(new java.awt.Dimension(400, 200));
+
+        lbRegisterInfo.setFont(new java.awt.Font("Tahoma", 1, 14));
+
+        btForceStart.setText("Force Start");
+        btForceStart.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btForceStartActionPerformed(evt);
+            }
+        });
+
+        btUnregister.setText("Unregister");
+        btUnregister.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btUnregisterActionPerformed(evt);
+            }
+        });
+
+        lbRegisteredError.setFont(new java.awt.Font("Tahoma", 1, 14));
+        lbRegisteredError.setForeground(new java.awt.Color(255, 0, 0));
+
+        javax.swing.GroupLayout pnRegisteredLayout = new javax.swing.GroupLayout(pnRegistered);
+        pnRegistered.setLayout(pnRegisteredLayout);
+        pnRegisteredLayout.setHorizontalGroup(
+            pnRegisteredLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnRegisteredLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnRegisteredLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lbRegisterInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 369, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(pnRegisteredLayout.createSequentialGroup()
+                        .addGap(69, 69, 69)
+                        .addComponent(btForceStart)
+                        .addGap(73, 73, 73)
+                        .addComponent(btUnregister))
+                    .addComponent(lbRegisteredError, javax.swing.GroupLayout.DEFAULT_SIZE, 380, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        pnRegisteredLayout.setVerticalGroup(
+            pnRegisteredLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnRegisteredLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lbRegisterInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addGroup(pnRegisteredLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btForceStart)
+                    .addComponent(btUnregister))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lbRegisteredError, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(88, Short.MAX_VALUE))
+        );
+
+        getContentPane().add(pnRegistered, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void tbRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tbRegisterActionPerformed
-        // TODO add your handling code here:
-        if (this.tbRegister.getName() == "Register") {
-            IClient clientStub = null;
-            myClient = new ClientImplementation();
-        
-            try {
-                clientStub = (IClient) UnicastRemoteObject.exportObject(myClient, 0);
-            } catch (RemoteException ex) {
-                ex.printStackTrace();
-                System.exit(-1);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                System.exit(-1);
-            }
-        
-            if(clientStub == null) {
-                Util.printDebug("ClientStub is null");
-                System.exit(-1);
-            }
-        
-        
-            //Anmerkung Stefan: isAlive Rückgabewert wird nicht weiterverarbeitet!
-            try {
-                clientStub.isAlive();
-            } catch (RemoteException ex) {
-               ex.printStackTrace();
-            }
+    private void btRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRegisterActionPerformed
 
-            if (this.tfName.getText() != null) {
-                myPlayer = new PlayerAdapter(this.tfName.getText(), myClient);
-                try {
-                    String[] serverAddress = this.tfServer.getText().split(":");
-                    myClient.init(serverAddress[0], Integer.valueOf(serverAddress[1]), myPlayer);
-                    myClient.installListener(new GameClient());
-                } catch (Exception ex) {
-                    //TODO: ExceptionHandling
-                    ex.printStackTrace();
-                  }
-            }
+        IClient clientStub = null;
 
-            try {
-                myClient.getMasterServer().register(myPlayer);
-                myClient.getMasterServer().forceStart(myPlayer);
-            } catch (NameAlreadyInUseException ex) {
-                ex.printStackTrace();
-                System.exit(-1);
-            } catch (GameStartException ex) {
-                ex.printStackTrace();                
-            } catch (RemoteException ex) {
-                ex.printStackTrace();
-                System.exit(-1);
-            } catch (Exception ex) {
-                ex.printStackTrace();
-                System.exit(-1);
-            }
-            
-            this.tbRegister.setName("Unregister");
+        String playerName = tfPlayerName.getText();
+        String serverHostName = tfServerHostName.getText();
+        String serverPort = tfServerPort.getText();
 
-            Util.printDebug(
-                    "Player ".
-                    concat(myPlayer.getName()).
-                    concat(" is registered with server")
-                    );
-
-            if (theGame != null) {
-                theGame.showWindow();
-            } else {
-                System.exit(-1);
-            }
+        if (playerName.isEmpty() | serverHostName.isEmpty() | serverPort.isEmpty()) {
+            lbRegisterFormError.setText(ERR_TEXTFIELDEMPTY);
+            return;
         }
-    if (this.tbRegister.getName() == "Unregister") {
+
+        myClient = new ClientImplementation();
+
+        try {
+            clientStub = (IClient) UnicastRemoteObject.exportObject(myClient, 0);
+        } catch (RemoteException ex) {
+            ex.printStackTrace();
+            System.exit(-1);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            System.exit(-1);
+        }
+
+        if (clientStub == null) {
+            Util.printDebug("ClientStub is null");
+            System.exit(-1);
+        }
+
+
+        myPlayer = new PlayerAdapter(playerName, myClient);
+
+        try {
+            myClient.init(serverHostName, Integer.parseInt(serverPort), myPlayer);
+            myClient.installListener(this);
+
+        } catch (Exception ex) {
+            //TODO: ExceptionHandling
+            ex.printStackTrace();
+        }
+
+
+        try {
+            myClient.getMasterServer().register(myPlayer);
+
+        } catch (NameAlreadyInUseException ex) {
+            lbRegisterFormError.setText(ERR_NAMEINUSE);
+            return;
+        } catch (ClientAlreadyRegisteredException ex) {
+            lbRegisterFormError.setText(ERR_ERROR);
+            return;
+        } catch (GameRegistryException ex) {
+            lbRegisterFormError.setText(ERR_ERROR);
+            return;
+        } catch (RemoteException ex) {
+            lbRegisterFormError.setText(ERR_SERVERNOTREACHED);
+            return;
+        }
+
+        lbRegisterFormError.setText("");
+        lbRegisterInfo.setText(
+                "Player ".concat(playerName).concat(" is registered with Server"));
+        pnRegisterForm.setVisible(false);
+        pnRegistered.setVisible(true);
+        this.setSize(pnRegistered.getSize());
+    }//GEN-LAST:event_btRegisterActionPerformed
+
+    private void btUnregisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btUnregisterActionPerformed
+
         try {
             myClient.getMasterServer().unregister(myPlayer);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }                
-        this.tbRegister.setName("Register");
-    }
-        
-    }//GEN-LAST:event_tbRegisterActionPerformed
+        } catch (GameRegistryException ex) {
+            lbRegisteredError.setText(ERR_ERROR);
+            return;
+        } catch (RemoteException ex) {
+            lbRegisteredError.setText(ERR_SERVERNOTREACHED);
+            return;
+        }
+        lbRegisteredError.setText("");
+        pnRegisterForm.setVisible(true);
+        pnRegistered.setVisible(false);
+        this.setSize(pnRegisterForm.getSize());
+    }//GEN-LAST:event_btUnregisterActionPerformed
 
-    public void gameStarted(Alcatraz game) {
-        theGame = game;
-        this.setVisible(false);
-        theGame.showWindow();
-    }    
-    
+    private void btForceStartActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btForceStartActionPerformed
+
+        try {
+            myClient.getMasterServer().forceStart(myPlayer);
+        } catch (GameStartException ex) {
+            lbRegisteredError.setText(ERR_NOTENOUGHPLAYER);
+            return;
+        } catch (RemoteException ex) {
+            lbRegisteredError.setText(ERR_SERVERNOTREACHED);
+            return;
+        }
+        lbRegisteredError.setText("");
+    }//GEN-LAST:event_btForceStartActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -239,13 +301,43 @@ public class GameGUI extends javax.swing.JFrame implements GameStartedListener {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JCheckBox jCheckBox1;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JList jList1;
-    private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JToggleButton tbRegister;
-    private javax.swing.JTextField tfName;
-    private javax.swing.JTextField tfServer;
+    private javax.swing.JButton btForceStart;
+    private javax.swing.JButton btRegister;
+    private javax.swing.JButton btUnregister;
+    private javax.swing.JLabel lbPlayerName;
+    private javax.swing.JLabel lbRegisterFormError;
+    private javax.swing.JLabel lbRegisterInfo;
+    private javax.swing.JLabel lbRegisteredError;
+    private javax.swing.JLabel lbServerAddress;
+    private javax.swing.JLabel lbServerPort;
+    private javax.swing.JPanel pnRegisterForm;
+    private javax.swing.JPanel pnRegistered;
+    private javax.swing.JTextField tfPlayerName;
+    private javax.swing.JTextField tfServerHostName;
+    private javax.swing.JTextField tfServerPort;
     // End of variables declaration//GEN-END:variables
+
+    public void gameStarted(Alcatraz game) {
+        theGame = game;
+        this.setVisible(false);
+        theGame.showWindow();
+    }
+
+    public void gameWon(Player player) {
+        int option = JOptionPane.showConfirmDialog(
+                theGame.getWindow(),
+                "Player ".concat(player.getName().concat(" wins! Do you want to start a new game?")),
+                "New Game?",
+                JOptionPane.YES_NO_OPTION);
+
+        if (option == JOptionPane.NO_OPTION) {
+            System.exit(0);
+        } else {
+            theGame.disposeWindow();
+            pnRegisterForm.setVisible(true);
+            pnRegistered.setVisible(false);
+            this.setSize(pnRegisterForm.getSize());
+            this.setVisible(true);
+        }
+    }
 }
