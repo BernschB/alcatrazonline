@@ -50,7 +50,7 @@ public class ClientImplementation implements IClient, MoveListener {
     private PlayerAdapter nextPlayer;
     private IRegistryServer masterServer;
     private List<PlayerAdapter> thePlayers = null;;
-    private GameStartedListener listener;
+    private ClientListener listener;
 
 
     public ClientImplementation () {
@@ -219,7 +219,7 @@ public class ClientImplementation implements IClient, MoveListener {
         return this.masterServer;
     }
 
-    public void installListener (GameStartedListener listener) {
+    public void installListener (ClientListener listener) {
         this.listener = listener;
     }
 
@@ -294,7 +294,7 @@ public class ClientImplementation implements IClient, MoveListener {
     }
 
     public void gameWon(Player player) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        listener.gameWon(player);
     }
 
 

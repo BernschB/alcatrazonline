@@ -42,6 +42,7 @@ import spread.SpreadMessage;
 public class RegistryServer implements Constants {
 
   private static String host = "localhost";
+  private static String port = "1099";
   private static SpreadConnection connection;
   private SpreadGroup group;
 
@@ -55,6 +56,7 @@ public class RegistryServer implements Constants {
       /*System.out.println("Starting up Spread Daemon...");
       this.startSpread();*/
       host = Util.getProperty(CONF_REGISTRYSERVERHOSTNAME);
+      port = Util.getProperty(CONF_REGISTRYSERVERPORT);
       System.out.println("Initializing Server on Host: "
               .concat(host)
               .concat("..."));
@@ -91,7 +93,9 @@ public class RegistryServer implements Constants {
       java.rmi.registry.LocateRegistry.createRegistry(1099);
       Naming.rebind("rmi://"
               .concat(host)
-              .concat(":1099/")
+              .concat(":")
+              .concat(port)
+              .concat("/")
               .concat(RMI_SERVER_SERVICE), r);
       System.out.println("Registry Server up and running. Ready to receive requests...");
     } catch (Exception e) {
