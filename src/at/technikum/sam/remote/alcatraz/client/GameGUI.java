@@ -20,6 +20,7 @@ import at.technikum.sam.remote.alcatraz.commons.IClient;
 import at.technikum.sam.remote.alcatraz.commons.NameAlreadyInUseException;
 import at.technikum.sam.remote.alcatraz.commons.PlayerAdapter;
 import at.technikum.sam.remote.alcatraz.commons.Util;
+import java.awt.BorderLayout;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import javax.swing.JOptionPane;
@@ -319,8 +320,14 @@ public class GameGUI extends javax.swing.JFrame implements Constants, ClientList
 
     public void gameStarted(Alcatraz game) {
         theGame = game;
-        this.setVisible(false);
-        theGame.showWindow();
+        pnRegisterForm.setVisible(false);
+        pnRegistered.setVisible(false);
+        this.getContentPane().add(theGame.getGameBoard(), BorderLayout.SOUTH);
+        this.setResizable(true);
+        this.setSize(theGame.getGameBoard().getSize());
+       
+        
+              
     }
 
     public void gameWon(Player player) {
@@ -333,9 +340,10 @@ public class GameGUI extends javax.swing.JFrame implements Constants, ClientList
         if (option == JOptionPane.NO_OPTION) {
             System.exit(0);
         } else {
-            theGame.disposeWindow();
+            
             pnRegisterForm.setVisible(true);
             pnRegistered.setVisible(false);
+            this.getContentPane().remove(theGame.getGameBoard());
             this.setSize(pnRegisterForm.getSize());
             this.setVisible(true);
         }
