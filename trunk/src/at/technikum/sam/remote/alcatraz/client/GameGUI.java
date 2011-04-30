@@ -23,6 +23,7 @@ import at.technikum.sam.remote.alcatraz.commons.Util;
 import java.awt.BorderLayout;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
@@ -42,6 +43,7 @@ public class GameGUI extends javax.swing.JFrame implements Constants, ClientList
         tfServerPort.setText(Util.getProperty(CONF_REGISTRYSERVERPORT));
         pnRegistered.setVisible(false);
         this.setSize(pnRegisterForm.getSize());
+         
     }
 
     /** This method is called from within the constructor to
@@ -320,20 +322,15 @@ public class GameGUI extends javax.swing.JFrame implements Constants, ClientList
 
     public void gameStarted(Alcatraz game) {
         theGame = game;
-        pnRegisterForm.setVisible(false);
-        pnRegistered.setVisible(false);
-        this.getContentPane().add(theGame.getGameBoard(), BorderLayout.SOUTH);
-        this.setResizable(true);
-        this.setSize(theGame.getGameBoard().getSize());
-       
-        
+        this.setVisible(false);
+        theGame.showWindow();
               
     }
 
     public void gameWon(Player player) {
         int option = JOptionPane.showConfirmDialog(
                 theGame.getWindow(),
-                "Player ".concat(player.getName().concat(" wins! Do you want to start a new game?")),
+                "Player ".concat(player.getName()).concat(" wins! Do you want to start a new game?"),
                 "New Game?",
                 JOptionPane.YES_NO_OPTION);
 
@@ -343,9 +340,23 @@ public class GameGUI extends javax.swing.JFrame implements Constants, ClientList
             
             pnRegisterForm.setVisible(true);
             pnRegistered.setVisible(false);
-            this.getContentPane().remove(theGame.getGameBoard());
             this.setSize(pnRegisterForm.getSize());
+            theGame.disposeWindow();
             this.setVisible(true);
+            
         }
+    }
+
+    public void playerAbsent(String name) {
+        
+        JOptionPane.showMessageDialog(
+                        theGame.getGameBoard(), 
+                        "Player ".
+                            concat(name).
+                            concat(" is absent!"), 
+                        "Player absent",
+                        JOptionPane.WARNING_MESSAGE
+                    );
+          
     }
 }
