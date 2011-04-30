@@ -10,12 +10,14 @@ import at.falb.games.alcatraz.api.Player;
 
 /**
  *
- * @author Sebastian
+ * TODO: Comment
  */
 public interface ClientListener {
 
     void gameStarted (Alcatraz game);
 
     void gameWon(Player player);
+    
+    void playerAbsent(String name);
 
 }

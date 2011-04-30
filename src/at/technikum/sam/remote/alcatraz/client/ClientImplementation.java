@@ -17,7 +17,6 @@
  * @date 2011/03/10
  *
  **/
-
 package at.technikum.sam.remote.alcatraz.client;
 
 import at.falb.games.alcatraz.api.Alcatraz;
@@ -28,12 +27,15 @@ import at.technikum.sam.remote.alcatraz.commons.GameStartException;
 import at.technikum.sam.remote.alcatraz.commons.IClient;
 import at.technikum.sam.remote.alcatraz.commons.Constants;
 import at.technikum.sam.remote.alcatraz.commons.IRegistryServer;
+import at.technikum.sam.remote.alcatraz.commons.Move;
 import at.technikum.sam.remote.alcatraz.commons.PlayerAdapter;
 import at.technikum.sam.remote.alcatraz.commons.Util;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -42,33 +44,31 @@ import java.util.ListIterator;
  * TODO: Comment
  */
 public class ClientImplementation implements IClient, MoveListener {
-
+    
     private String masterServerUrl;
     private int masterServerPort;
     private Alcatraz game;
     private PlayerAdapter myPlayer;
     private PlayerAdapter nextPlayer;
     private IRegistryServer masterServer;
-    private List<PlayerAdapter> thePlayers = null;;
+    private List<PlayerAdapter> thePlayers = null;
+    ;
     private ClientListener listener;
-
-
-    public ClientImplementation () {
+    
+    public ClientImplementation() {
         super();
     }
-
-    public void init (String host, int port, PlayerAdapter myPlayer)
+    
+    public void init(String host, int port, PlayerAdapter myPlayer)
             throws RemoteException, NotBoundException, MalformedURLException {
         this.masterServerUrl = host;
         this.masterServerPort = port;
         this.game = new Alcatraz();
         this.myPlayer = myPlayer;
-
+        
         this.lookupMaster();
         
     }
-
-
 
     //<editor-fold defaultstate="collapsed" desc="IClient Implementation">
     /**
@@ -78,18 +78,18 @@ public class ClientImplementation implements IClient, MoveListener {
      * @param port
      * @throws RemoteException
      */
-
-    public void reportNewMaster(String host, int port) throws RemoteException {
-       if(!masterServerUrl.equals(host) || (masterServerPort != port)) {
-           this.masterServerUrl = host;
-           this.masterServerPort = port;
-           try {
-               this.lookupMaster();
-           } catch (Exception ex) {
-               //TODO: Error Handling
-               ex.printStackTrace();
-           }
-       }
+    public boolean reportNewMaster(String host, int port) throws RemoteException {
+        if (!masterServerUrl.equals(host) || (masterServerPort != port)) {
+            this.masterServerUrl = host;
+            this.masterServerPort = port;
+            try {
+                this.lookupMaster();
+            } catch (Exception ex) {
+                //TODO: Error Handling
+                ex.printStackTrace();
+            }
+        }
+        return true;
     }
 
     /**
@@ -99,19 +99,19 @@ public class ClientImplementation implements IClient, MoveListener {
      * @throws RemoteException
      */
     public boolean isAlive() throws RemoteException {
-
-       return true;
+        
+        return true;
     }
 
-     /*
+    /*
      * TODO: DEBUG - remote-method used only or debug purposes remove when finished
      * When needed replace whith calls to isAlive() before deploying
      */
-     public void debugIsAlive(String callerName)
+    public boolean debugIsAlive(String callerName)
             throws RemoteException {
-         Util.printDebug("Is alive called by ".concat(callerName));
-     }
-
+        Util.printDebug("Is alive called by ".concat(callerName));
+        return true;
+    }
 
     /**
      * TODO: comment
@@ -123,121 +123,116 @@ public class ClientImplementation implements IClient, MoveListener {
      */
     public boolean startGame(List<PlayerAdapter> players) throws GameStartException, RemoteException {
         this.thePlayers = players;
-
-      boolean myClientFoundFlag = false;
-
-      for(PlayerAdapter player : players) {
-          try {
-            player.getClientstub().debugIsAlive(this.myPlayer.getName());
-          } catch (Exception ex) {
-              ex.printStackTrace();
-              throw new RemoteException();
-          }    
-      }
-
-
         
-       for(ListIterator<PlayerAdapter> it = players.listIterator(); it.hasNext(); ) {
+        boolean myClientFoundFlag = false;
+        
+        for (PlayerAdapter player : players) {
+            try {
+                player.getClientstub().debugIsAlive(this.myPlayer.getName());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                throw new RemoteException();
+            }
+        }
+        
+        
+        
+        for (ListIterator<PlayerAdapter> it = players.listIterator(); it.hasNext();) {
             PlayerAdapter next = it.next();
-            if(next.equals(this.myPlayer)) {
+            if (next.equals(this.myPlayer)) {
                 
                 this.game.init(players.size(), it.previousIndex());
-
-                if(it.hasNext()){
+                
+                if (it.hasNext()) {
                     this.nextPlayer = it.next();
                 } else {
                     this.nextPlayer = players.get(0);
                 }
                 myClientFoundFlag = true;
                 break;
-           }
-
-       }
-       Util.printDebug("Next Player is: ".
-                 concat(this.nextPlayer.getName())
-                 );
-
-
-      if(!myClientFoundFlag) {
+            }
+            
+        }
+        Util.printDebug("Next Player is: ".concat(this.nextPlayer.getName()));
+        
+        
+        if (!myClientFoundFlag) {
             throw new GameStartException();
-       }
-
-      int i = 0;
-
-      for(PlayerAdapter player : players) {
-          this.game.getPlayer(i).setName(player.getName());
-          i++;
-      }
-      //TODO: Remove debug
-     while(i > 0) {
-         i--;
-         Util.printDebug("Player with id ".
-                 concat(String.valueOf(i)).
-                 concat(" has the name: ").
-                 concat(this.game.getPlayer(i).getName())
-                 );
-     }
-
-
-
+        }
+        
+        int i = 0;
+        
+        for (PlayerAdapter player : players) {
+            this.game.getPlayer(i).setName(player.getName());
+            i++;
+        }
+        //TODO: Remove debug
+        while (i > 0) {
+            i--;
+            Util.printDebug("Player with id ".concat(String.valueOf(i)).
+                    concat(" has the name: ").
+                    concat(this.game.getPlayer(i).getName()));
+        }
+        
+        
+        
         this.game.addMoveListener(this);
         this.game.start();
-
+        
         this.listener.gameStarted(game);
-
+        
         return true;
     }
-
-    public void doMove(Player player, Prisoner prisoner, int rowOrCol, int row, int col)
+    
+    public boolean doMove(Player player, Prisoner prisoner, int rowOrCol, int row, int col)
             throws RemoteException {
         this.game.doMove(
-                    this.game.getPlayer(player.getId()),
-                    this.game.getPrisoner(prisoner.getId()),
-                    rowOrCol,
-                    row,
-                    col
-                );
+                this.game.getPlayer(player.getId()),
+                this.game.getPrisoner(prisoner.getId()),
+                rowOrCol,
+                row,
+                col);
+        return true;
     }
-
-
-    public void yourTurn() throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
-    public void playerAbsent(PlayerAdapter player) throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet.");
-    }
-
     
+    public void playerAbsent(PlayerAdapter player) throws RemoteException {
+        this.listener.playerAbsent(player.getName());
+    }
+   
     // </editor-fold>
-
-
-
     // <editor-fold defaultstate="collapsed" desc="Public Methods">
-
-    public IRegistryServer getMasterServer () {
+    public IRegistryServer getMasterServer() {
         return this.masterServer;
     }
-
-    public void installListener (ClientListener listener) {
+    
+    public void installListener(ClientListener listener) {
         this.listener = listener;
     }
 
+    public PlayerAdapter getMyPlayer() {
+        return myPlayer;
+    }
+
+    public PlayerAdapter getNextPlayer() {
+        return nextPlayer;
+    }
+
+    public List<PlayerAdapter> getThePlayers() {
+        return thePlayers;
+    }
+    
+    
+
     // </editor-fold>
-
     // <editor-fold defaultstate="collapsed" desc="Private Methods">
-
-    private void lookupMaster() 
+    private void lookupMaster()
             throws MalformedURLException, NotBoundException, RemoteException {
-
+        
         try {
             this.masterServer = (IRegistryServer) Naming.lookup(
-                    "rmi://"
-                    .concat(this.masterServerUrl)
-                   // .concat(":")
+                    "rmi://".concat(this.masterServerUrl) // .concat(":")
                     //.concat(String.valueOf(this.masterServerPort))
-                    .concat("/")
-                    .concat(Constants.RMI_SERVER_SERVICE));
+                    .concat("/").concat(Constants.RMI_SERVER_SERVICE));
         } catch (MalformedURLException ex) {
             throw ex;
         } catch (NotBoundException ex) {
@@ -245,60 +240,60 @@ public class ClientImplementation implements IClient, MoveListener {
         } catch (RemoteException ex) {
             throw ex;
         }
-
+        
+    }
+    
+    private void distributeMove(PlayerAdapter currentPlayer, Player player, Prisoner prsnr, int i, int i1, int i2) {
+        
+        boolean success = false;
+        
+        while (!success) {
+            try {
+                success = currentPlayer.getClientstub().doMove(player, prsnr, i, i1, i2);
+            } catch (RemoteException ex) {
+                // TODO: Error Handling => playerAbsent
+                try {
+                    for (PlayerAdapter otherPlayer : this.thePlayers) {
+                        if (!otherPlayer.equals(currentPlayer)) {
+                            otherPlayer.getClientstub().playerAbsent(currentPlayer);                            
+                        }
+                    }
+                    
+                    //Thread.sleep(Constants.TIMEOUT);
+                } /*catch (InterruptedException e) {
+                    e.printStackTrace();
+                } */catch (Exception e) {
+                    e.printStackTrace();
+                }
+                success = false;
+            }
+        }
     }
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="MoveListener Methods">
-
     public void moveDone(Player player, Prisoner prsnr, int i, int i1, int i2) {
-
-        for(PlayerAdapter currentPlayer : this.thePlayers){
-            if(!(currentPlayer.equals(this.myPlayer)
-                 || (currentPlayer.equals(this.nextPlayer)) )) {
-
-                while (true) {
-                    try {
-                        currentPlayer.getClientstub().doMove(player, prsnr, i, i1, i2);
-                    } catch (RemoteException ex) {
-                        // TODO: Error Handling => playerAbsent
-                        try {
-                            
-                           Thread.sleep(Constants.TIMEOUT);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                        continue;
-                    }
-                    break;
-                }
-            }
-        }
-
-        while (true) {
-            try {
-                this.nextPlayer.getClientstub().doMove(player, prsnr, i, i1, i2);
-            } catch (RemoteException ex) {
-                // TODO: Error Handling => playerAbsent
-                try {
-
-                   Thread.sleep(Constants.TIMEOUT);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                continue;
-            }
-            break;
-      }
-
+        
+        Move move = new Move(player, prsnr, i, i1, i2);
+        DistributeMoveThread distributeMove = new DistributeMoveThread(this, move);
+        distributeMove.start();
+        
+        
+//        for (PlayerAdapter currentPlayer : this.thePlayers) {
+//            if (!(currentPlayer.equals(this.myPlayer)
+//                    || (currentPlayer.equals(this.nextPlayer)))) {
+//                
+//                distributeMove(currentPlayer, player, prsnr, i, i1, i2);
+//                
+//            }
+//        }
+//        
+//        distributeMove(nextPlayer, player, prsnr, i, i1, i2);
+        
     }
-
+    
     public void gameWon(Player player) {
         listener.gameWon(player);
     }
-
-
-     // </editor-fold>
-
-
+    // </editor-fold>
 }

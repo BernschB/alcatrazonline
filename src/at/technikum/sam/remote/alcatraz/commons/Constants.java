@@ -33,6 +33,11 @@ public interface Constants {
      * Timeout to wait between retries if move propagation fails
      */
     public final static int TIMEOUT = 6000;
+    
+    /**
+     * Maximum number of retries when when trying to reach client
+     */
+    public final static int MAXRETRIES = 10;
 
     /**
      * RMI Object service name for IClients
