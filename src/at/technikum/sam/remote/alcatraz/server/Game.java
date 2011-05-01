@@ -194,4 +194,12 @@ public class Game implements Serializable, Constants {
     public void setMasterPort(int masterPort) {
         this.masterPort = masterPort;
     }
+
+    public String getMasterHost() {
+        return masterHost;
+    }
+
+    public int getMasterPort() {
+        return masterPort;
+    }
 }

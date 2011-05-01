@@ -27,6 +27,7 @@ import at.technikum.sam.remote.alcatraz.commons.ClientAlreadyRegisteredException
 import at.technikum.sam.remote.alcatraz.commons.PlayerAdapter;
 import at.technikum.sam.remote.alcatraz.commons.Constants;
 import at.technikum.sam.remote.alcatraz.commons.IClient;
+import at.technikum.sam.remote.alcatraz.commons.NotMasterException;
 import at.technikum.sam.remote.alcatraz.commons.Util;
 import java.io.Serializable;
 import java.rmi.RemoteException;
@@ -72,7 +73,10 @@ public class RegistryServerImplementation extends UnicastRemoteObject
      * @throws RemoteException when ??? uhm...yeah when actually ??? TODO
      */
     public void register(PlayerAdapter player)
-            throws NameAlreadyInUseException, ClientAlreadyRegisteredException, GameRegistryException, RemoteException {
+            throws NameAlreadyInUseException, ClientAlreadyRegisteredException, GameRegistryException, RemoteException, NotMasterException {
+        if (!master) {
+            throw new  NotMasterException(currentGame.getMasterHost(),currentGame.getMasterPort());
+        }
         try {
             player.getClientstub().debugIsAlive("Server register()");
         } catch (RemoteException ex) {
