@@ -302,20 +302,20 @@ public class RegistryServerImplementation extends UnicastRemoteObject
         SpreadGroup group[] = membershipInformation.getMembers();
         if (group.length == 1) {   // only 1 entry => this server is new master
             if (membershipInformation.getJoined() != null) {
-                Util.printDebug(Util.getProperty(CONF_PRIVATESPREADGROUP).concat(": I'm the first server online"));
+                Util.printDebug(CONF_PRIVATESPREADGROUP.concat(": I'm the first server online"));
             } else {
-                Util.printDebug(Util.getProperty(CONF_PRIVATESPREADGROUP).concat(": I'm the last server online"));
+                Util.printDebug(CONF_PRIVATESPREADGROUP.concat(": I'm the last server online"));
             }
             master = true;
             synced = true;
         } else {  // more than 1 server online
-            if (group[0].toString().contains(Util.getProperty(CONF_PRIVATESPREADGROUP))) { // this server is new master
+            if (group[0].toString().contains(CONF_PRIVATESPREADGROUP)) { // this server is new master
                 if (master) {        // server is current master?
                     this.synchronizeGame();
                     synced = true;
-                    Util.printDebug(Util.getProperty(CONF_PRIVATESPREADGROUP).concat(": I'm the old and new master"));
+                    Util.printDebug(CONF_PRIVATESPREADGROUP.concat(": I'm the old and new master"));
                 } else {                // no, wait for sync message from old master
-                    Util.printDebug(Util.getProperty(CONF_PRIVATESPREADGROUP).concat(": I'm the new master"));
+                    Util.printDebug(CONF_PRIVATESPREADGROUP.concat(": I'm the new master"));
                     if (synced) {
                         this.synchronizeGame();
                         reportMeAsNewMaster();
@@ -323,19 +323,19 @@ public class RegistryServerImplementation extends UnicastRemoteObject
 
                     master = true;
                     if (membershipInformation.getJoined() != null) {
-                        if (membershipInformation.getJoined().toString().contains(Util.getProperty(CONF_PRIVATESPREADGROUP))) {
-                            Util.printDebug(Util.getProperty(CONF_PRIVATESPREADGROUP).concat(": I'm new and I'm master... HELP"));
+                        if (membershipInformation.getJoined().toString().contains(CONF_PRIVATESPREADGROUP)) {
+                            Util.printDebug(CONF_PRIVATESPREADGROUP.concat(": I'm new and I'm master... HELP"));
                         }
                     }
                 }
             } else {      // do not become master
                 if (master) {    // server is current master?
-                    Util.printDebug(Util.getProperty(CONF_PRIVATESPREADGROUP).concat(": I was the old master"));
+                    Util.printDebug(CONF_PRIVATESPREADGROUP.concat(": I was the old master"));
                     this.synchronizeGame();   // send sync to for master
                     master = false;
                     synced = false;
                 } else {
-                    Util.printDebug(Util.getProperty(CONF_PRIVATESPREADGROUP).concat(": I'm nothing"));
+                    Util.printDebug(CONF_PRIVATESPREADGROUP.concat(": I'm nothing"));
                     master = false;
                     synced = false;
                 }
@@ -415,8 +415,8 @@ public class RegistryServerImplementation extends UnicastRemoteObject
             IClient clientstub = player.getClientstub();
             try {
                 clientstub.reportNewMaster(
-                        Util.getProperty(CONF_REGISTRYSERVERHOSTNAME),
-                        Integer.parseInt(Util.getProperty(CONF_REGISTRYSERVERPORT)));
+                        CONF_REGISTRYSERVERHOSTNAME,
+                        Integer.parseInt(CONF_REGISTRYSERVERPORT));
             } catch (RemoteException ex) {
                 Logger.getLogger(RegistryServerImplementation.class.getName()).log(Level.SEVERE, null, ex);
             }
