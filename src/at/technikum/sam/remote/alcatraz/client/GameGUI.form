@@ -54,7 +54,7 @@
                               <Component id="btRegister" alignment="0" min="-2" pref="106" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <Component id="lbRegisterFormError" alignment="1" pref="380" max="32767" attributes="1"/>
+                      <Component id="lbRegisterFormError" alignment="1" pref="360" max="32767" attributes="1"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -85,7 +85,7 @@
                   <Component id="btRegister" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="lbRegisterFormError" min="-2" pref="19" max="-2" attributes="0"/>
-                  <EmptySpace pref="54" max="32767" attributes="0"/>
+                  <EmptySpace pref="30" max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -157,7 +157,7 @@
                           <EmptySpace min="-2" pref="73" max="-2" attributes="0"/>
                           <Component id="btUnregister" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <Component id="lbRegisteredError" alignment="0" pref="380" max="32767" attributes="1"/>
+                      <Component id="lbRegisteredError" alignment="0" pref="369" max="32767" attributes="1"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
