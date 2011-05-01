@@ -55,8 +55,8 @@ public class RegistryServer implements Constants {
     try {
       /*System.out.println("Starting up Spread Daemon...");
       this.startSpread();*/
-      host = Util.getProperty(CONF_REGISTRYSERVERHOSTNAME);
-      port = Util.getProperty(CONF_REGISTRYSERVERPORT);
+      host = CONF_REGISTRYSERVERHOSTNAME;
+      port = CONF_REGISTRYSERVERPORT;
       System.out.println("Initializing Server on Host: "
               .concat(host)
               .concat("..."));
@@ -70,7 +70,7 @@ public class RegistryServer implements Constants {
         connection = new SpreadConnection();
         connection.connect(InetAddress.getByName(host),
                 0,
-               Util.getProperty(CONF_PRIVATESPREADGROUP),
+                CONF_PRIVATESPREADGROUP,
                 true,
                 true);
 

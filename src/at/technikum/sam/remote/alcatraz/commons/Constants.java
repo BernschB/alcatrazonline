@@ -66,19 +66,19 @@ public interface Constants {
      * Property Key for Registry Server Hostname property
      */
     public final static String CONF_REGISTRYSERVERHOSTNAME
-            = "RegistryServerHostname";
+            = Util.getProperty("RegistryServerHostname");
 
     /**
      * Property Key for Private Spread Group property
      */
     public final static String CONF_PRIVATESPREADGROUP
-            = "PrivateSpreadGroup";
+            = Util.getProperty("PrivateSpreadGroup");
     
     /**
      * Property KEy for Registry Server Por
      */
     public final static String CONF_REGISTRYSERVERPORT
-            = "RegistryServerPort";
+            = Util.getProperty("RegistryServerPort");
     /**
      * Error Message displayed to the user if Player Name is already in use
      */
