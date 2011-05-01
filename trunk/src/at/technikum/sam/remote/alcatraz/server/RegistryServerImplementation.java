@@ -156,7 +156,7 @@ public class RegistryServerImplementation extends UnicastRemoteObject
                 input = o.toString();
             }
 
-            //Util.printDebug(input);
+            Util.printDebug(input);
             Util.printDebug("Spammer: ".concat(spreadMessage.getSender().toString()));
             /**
              * TODO: Implement Server state synchronisation here
@@ -401,6 +401,8 @@ public class RegistryServerImplementation extends UnicastRemoteObject
         SpreadMessage spreadMessage = new SpreadMessage();
         spreadMessage.addGroup(SPREAD_SERVER_GROUP_NAME); // notwendig ?
         try {
+            currentGame.setMasterHost(CONF_REGISTRYSERVERHOSTNAME);
+            currentGame.setMasterPort(Integer.parseInt(CONF_REGISTRYSERVERPORT));
             spreadMessage.setObject(currentGame);
             spreadMessage.setReliable();
             spreadMessage.setFifo();
