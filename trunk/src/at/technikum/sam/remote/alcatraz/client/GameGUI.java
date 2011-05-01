@@ -18,11 +18,14 @@ import at.technikum.sam.remote.alcatraz.commons.GameRegistryException;
 import at.technikum.sam.remote.alcatraz.commons.GameStartException;
 import at.technikum.sam.remote.alcatraz.commons.IClient;
 import at.technikum.sam.remote.alcatraz.commons.NameAlreadyInUseException;
+import at.technikum.sam.remote.alcatraz.commons.NotMasterException;
 import at.technikum.sam.remote.alcatraz.commons.PlayerAdapter;
 import at.technikum.sam.remote.alcatraz.commons.Util;
 import java.awt.BorderLayout;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -39,11 +42,11 @@ public class GameGUI extends javax.swing.JFrame implements Constants, ClientList
     /** Creates new form GameUi */
     public GameGUI() {
         initComponents();
-        tfServerHostName.setText(Util.getProperty(CONF_REGISTRYSERVERHOSTNAME));
-        tfServerPort.setText(Util.getProperty(CONF_REGISTRYSERVERPORT));
+        tfServerHostName.setText(CONF_REGISTRYSERVERHOSTNAME);
+        tfServerPort.setText(CONF_REGISTRYSERVERPORT);
         pnRegistered.setVisible(false);
         this.setSize(pnRegisterForm.getSize());
-         
+
     }
 
     /** This method is called from within the constructor to
@@ -235,24 +238,8 @@ public class GameGUI extends javax.swing.JFrame implements Constants, ClientList
             ex.printStackTrace();
         }
 
-
-        try {
-            myClient.getMasterServer().register(myPlayer);
-
-        } catch (NameAlreadyInUseException ex) {
-            lbRegisterFormError.setText(ERR_NAMEINUSE);
-            return;
-        } catch (ClientAlreadyRegisteredException ex) {
-            lbRegisterFormError.setText(ERR_ERROR);
-            return;
-        } catch (GameRegistryException ex) {
-            lbRegisterFormError.setText(ERR_ERROR);
-            return;
-        } catch (RemoteException ex) {
-            lbRegisterFormError.setText(ERR_SERVERNOTREACHED);
-            return;
-        }
-
+        registerPlayer();
+        
         lbRegisterFormError.setText("");
         lbRegisterInfo.setText(
                 "Player ".concat(playerName).concat(" is registered with Server"));
@@ -324,7 +311,7 @@ public class GameGUI extends javax.swing.JFrame implements Constants, ClientList
         theGame = game;
         this.setVisible(false);
         theGame.showWindow();
-              
+
     }
 
     public void gameWon(Player player) {
@@ -337,26 +324,50 @@ public class GameGUI extends javax.swing.JFrame implements Constants, ClientList
         if (option == JOptionPane.NO_OPTION) {
             System.exit(0);
         } else {
-            
+
             pnRegisterForm.setVisible(true);
             pnRegistered.setVisible(false);
             this.setSize(pnRegisterForm.getSize());
             theGame.disposeWindow();
             this.setVisible(true);
-            
+
         }
     }
 
     public void playerAbsent(String name) {
-        
+
         JOptionPane.showMessageDialog(
-                        theGame.getGameBoard(), 
-                        "Player ".
-                            concat(name).
-                            concat(" is absent!"), 
-                        "Player absent",
-                        JOptionPane.WARNING_MESSAGE
-                    );
-          
+                theGame.getGameBoard(),
+                "Player ".concat(name).
+                concat(" is absent!"),
+                "Player absent",
+                JOptionPane.WARNING_MESSAGE);
+
+    }
+
+    private void registerPlayer() {
+        try {
+            myClient.getMasterServer().register(myPlayer);
+        } catch (NameAlreadyInUseException ex) {
+            lbRegisterFormError.setText(ERR_NAMEINUSE);
+            return;
+        } catch (ClientAlreadyRegisteredException ex) {
+            lbRegisterFormError.setText(ERR_ERROR);
+            return;
+        } catch (GameRegistryException ex) {
+            lbRegisterFormError.setText(ERR_ERROR);
+            return;
+        } catch (RemoteException ex) {
+            lbRegisterFormError.setText(ERR_SERVERNOTREACHED);
+            return;
+        } catch (NotMasterException ex) {
+            try {
+                myClient.reportNewMaster(ex.getHost(), ex.getPort());
+            } catch (RemoteException ex1) {
+                Util.printDebug(ex1.getMessage());
+            }
+            registerPlayer();
+        }
+
     }
 }

@@ -35,7 +35,7 @@ public interface IRegistryServer extends Remote {
      */
 
     void register(PlayerAdapter player)
-            throws NameAlreadyInUseException, ClientAlreadyRegisteredException, GameRegistryException, RemoteException;
+            throws NameAlreadyInUseException, ClientAlreadyRegisteredException, GameRegistryException, RemoteException, NotMasterException;
 
     void unregister(PlayerAdapter player)
             throws GameRegistryException, RemoteException;
