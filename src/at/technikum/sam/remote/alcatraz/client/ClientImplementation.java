@@ -243,32 +243,7 @@ public class ClientImplementation implements IClient, MoveListener {
         
     }
     
-    private void distributeMove(PlayerAdapter currentPlayer, Player player, Prisoner prsnr, int i, int i1, int i2) {
-        
-        boolean success = false;
-        
-        while (!success) {
-            try {
-                success = currentPlayer.getClientstub().doMove(player, prsnr, i, i1, i2);
-            } catch (RemoteException ex) {
-                // TODO: Error Handling => playerAbsent
-                try {
-                    for (PlayerAdapter otherPlayer : this.thePlayers) {
-                        if (!otherPlayer.equals(currentPlayer)) {
-                            otherPlayer.getClientstub().playerAbsent(currentPlayer);                            
-                        }
-                    }
-                    
-                    //Thread.sleep(Constants.TIMEOUT);
-                } /*catch (InterruptedException e) {
-                    e.printStackTrace();
-                } */catch (Exception e) {
-                    e.printStackTrace();
-                }
-                success = false;
-            }
-        }
-    }
+    
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="MoveListener Methods">
@@ -277,18 +252,6 @@ public class ClientImplementation implements IClient, MoveListener {
         Move move = new Move(player, prsnr, i, i1, i2);
         DistributeMoveThread distributeMove = new DistributeMoveThread(this, move);
         distributeMove.start();
-        
-        
-//        for (PlayerAdapter currentPlayer : this.thePlayers) {
-//            if (!(currentPlayer.equals(this.myPlayer)
-//                    || (currentPlayer.equals(this.nextPlayer)))) {
-//                
-//                distributeMove(currentPlayer, player, prsnr, i, i1, i2);
-//                
-//            }
-//        }
-//        
-//        distributeMove(nextPlayer, player, prsnr, i, i1, i2);
         
     }
     
