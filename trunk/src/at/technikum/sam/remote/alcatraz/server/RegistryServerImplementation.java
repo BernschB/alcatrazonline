@@ -145,8 +145,10 @@ public class RegistryServerImplementation extends UnicastRemoteObject
                  * if you use multiple masters, nightmares about race conditions!!!
                  */
                 currentGame = (Game) o;
-                reportMeAsNewMaster();
-                this.synced = true;       // this must be set at a master to send messages
+                if (synced == false && master == true) {
+                    reportMeAsNewMaster();
+                }
+                synced = true;       // this must be set at a master to send messages
                 input = currentGame.toString();
             } else if (o instanceof String) {
                 input = (String) o;
@@ -304,21 +306,22 @@ public class RegistryServerImplementation extends UnicastRemoteObject
             } else {
                 Util.printDebug(Util.getProperty(CONF_PRIVATESPREADGROUP).concat(": I'm the last server online"));
             }
-            this.master = true;
-            this.synced = true;
+            master = true;
+            synced = true;
         } else {  // more than 1 server online
             if (group[0].toString().contains(Util.getProperty(CONF_PRIVATESPREADGROUP))) { // this server is new master
-                if (this.master) {        // server is current master?
+                if (master) {        // server is current master?
                     this.synchronizeGame();
-                    this.synced = true;
+                    synced = true;
                     Util.printDebug(Util.getProperty(CONF_PRIVATESPREADGROUP).concat(": I'm the old and new master"));
                 } else {                // no, wait for sync message from old master
                     Util.printDebug(Util.getProperty(CONF_PRIVATESPREADGROUP).concat(": I'm the new master"));
-                    if (this.synced) {
+                    if (synced) {
                         this.synchronizeGame();
+                        reportMeAsNewMaster();
                     }
-                    reportMeAsNewMaster();
-                    this.master = true;
+
+                    master = true;
                     if (membershipInformation.getJoined() != null) {
                         if (membershipInformation.getJoined().toString().contains(Util.getProperty(CONF_PRIVATESPREADGROUP))) {
                             Util.printDebug(Util.getProperty(CONF_PRIVATESPREADGROUP).concat(": I'm new and I'm master... HELP"));
@@ -326,15 +329,15 @@ public class RegistryServerImplementation extends UnicastRemoteObject
                     }
                 }
             } else {      // do not become master
-                if (this.master) {    // server is current master?
+                if (master) {    // server is current master?
                     Util.printDebug(Util.getProperty(CONF_PRIVATESPREADGROUP).concat(": I was the old master"));
                     this.synchronizeGame();   // send sync to for master
-                    this.master = false;
-                    this.synced = false;
+                    master = false;
+                    synced = false;
                 } else {
                     Util.printDebug(Util.getProperty(CONF_PRIVATESPREADGROUP).concat(": I'm nothing"));
-                    this.master = false;
-                    this.synced = false;
+                    master = false;
+                    synced = false;
                 }
             }
         }
@@ -406,22 +409,18 @@ public class RegistryServerImplementation extends UnicastRemoteObject
             Logger.getLogger(RegistryServerImplementation.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     private void reportMeAsNewMaster() {
-        if (synced == false && master == true) {
-            for (PlayerAdapter player : currentGame.getPlayers()) {
-                IClient clientstub = player.getClientstub(); 
-                try {
-                    clientstub.reportNewMaster(
-                            Util.getProperty(CONF_REGISTRYSERVERHOSTNAME), 
-                            Integer.parseInt(Util.getProperty(CONF_REGISTRYSERVERPORT)));
-                } catch (RemoteException ex) {
-                    Logger.getLogger(RegistryServerImplementation.class.getName()).log(Level.SEVERE, null, ex);
-                }
+        for (PlayerAdapter player : currentGame.getPlayers()) {
+            IClient clientstub = player.getClientstub();
+            try {
+                clientstub.reportNewMaster(
+                        Util.getProperty(CONF_REGISTRYSERVERHOSTNAME),
+                        Integer.parseInt(Util.getProperty(CONF_REGISTRYSERVERPORT)));
+            } catch (RemoteException ex) {
+                Logger.getLogger(RegistryServerImplementation.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
     // </editor-fold>
-
-    
 }
