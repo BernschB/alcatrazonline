@@ -26,6 +26,7 @@ import at.technikum.sam.remote.alcatraz.commons.NameAlreadyInUseException;
 import at.technikum.sam.remote.alcatraz.commons.ClientAlreadyRegisteredException;
 import at.technikum.sam.remote.alcatraz.commons.PlayerAdapter;
 import at.technikum.sam.remote.alcatraz.commons.Constants;
+import at.technikum.sam.remote.alcatraz.commons.IClient;
 import at.technikum.sam.remote.alcatraz.commons.Util;
 import java.io.Serializable;
 import java.rmi.RemoteException;
@@ -144,6 +145,22 @@ public class RegistryServerImplementation extends UnicastRemoteObject
                  * if you use multiple masters, nightmares about race conditions!!!
                  */
                 currentGame = (Game) o;
+                
+                /**
+                 * TODO: put this block in a method...
+                 */
+                if (synced == false && master == true) {
+                    for (PlayerAdapter player : currentGame.getPlayers()) {
+                        IClient clientstub = player.getClientstub(); 
+                        try {
+                            clientstub.reportNewMaster(
+                                    Util.getProperty(CONF_REGISTRYSERVERHOSTNAME), 
+                                    Integer.parseInt(Util.getProperty(CONF_REGISTRYSERVERPORT)));
+                        } catch (RemoteException ex) {
+                            Logger.getLogger(RegistryServerImplementation.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                    }
+                }
                 this.synced = true;       // this must be set at a master to send messages
                 input = currentGame.toString();
             } else if (o instanceof String) {
@@ -189,7 +206,7 @@ public class RegistryServerImplementation extends UnicastRemoteObject
             } else if (membershipInformation.isCausedByLeave()
                     || membershipInformation.isCausedByDisconnect()
                     || membershipInformation.isCausedByNetwork()) {
-                Util.printDebug("Member left group.   ".concat(membershipInformation.getLeft().toString()));
+                //Util.printDebug("Member left group.   ".concat(membershipInformation.getLeft().toString()));
                 Util.printDebug("List of existing members.");
                 for (SpreadGroup g : members) {
                     Util.printDebug(g.toString());
@@ -197,6 +214,8 @@ public class RegistryServerImplementation extends UnicastRemoteObject
                 this.electMaster(membershipInformation);
             }
         } else if (membershipInformation.isSelfLeave()) {
+            master = false;
+            synced = false;
             Util.printDebug("I'm out now.");
         }
 
