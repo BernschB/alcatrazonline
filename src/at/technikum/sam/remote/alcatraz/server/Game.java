@@ -42,6 +42,8 @@ public class Game implements Serializable, Constants {
     //TODO: Vector is an obsolete Collection according to api-docu it should not be used
     private List<PlayerAdapter> players;
     private static int sequencer = -1;
+    private String masterHost="";
+    private int masterPort=0;
     /**
      * Constructor of GameRegistry
      */
@@ -183,5 +185,13 @@ public class Game implements Serializable, Constants {
         }
 
         return sb.toString();
+    }
+
+    public void setMasterHost(String masterHost) {
+        this.masterHost = masterHost;
+    }
+
+    public void setMasterPort(int masterPort) {
+        this.masterPort = masterPort;
     }
 }
