@@ -135,8 +135,9 @@ public class RegistryServerImplementation extends UnicastRemoteObject
 
     // <editor-fold defaultstate="collapsed" desc="AdvancedMessageListener Implementation">
     /**
-     * TODO: comment
-     * @param spreadMessage
+     * New regular message is received
+     *
+     * @param spreadMessage the received message
      */
     public void regularMessageReceived(SpreadMessage spreadMessage) {
         Util.printDebug("Regular message received.");
@@ -144,13 +145,9 @@ public class RegistryServerImplementation extends UnicastRemoteObject
             Object o = spreadMessage.getObject();
             String input = "";
             if (o instanceof Game) {
-                /** TODO: Game is simply overwritten at sync
-                 * if this is a slave, don't care about it
-                 * if you use multiple masters, nightmares about race conditions!!!
-                 */
-                currentGame = (Game) o;
+                currentGame = (Game) o;   // save reveived object
                 if (synced == false && master == true) {
-                    reportMeAsNewMaster();
+                    reportMeAsNewMaster();  // if this server is the new master report this to the clients
                 }
                 synced = true;       // this must be set at a master to send messages
                 input = currentGame.toString();
@@ -161,10 +158,7 @@ public class RegistryServerImplementation extends UnicastRemoteObject
             }
 
             Util.printDebug(input);
-            Util.printDebug("Spammer: ".concat(spreadMessage.getSender().toString()));
-            /**
-             * TODO: Implement Server state synchronisation here
-             */
+            Util.printDebug("Sync from ".concat(spreadMessage.getSender().toString()));
         } catch (SpreadException ex) {
             Logger.getLogger(RegistryServerImplementation.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -172,28 +166,25 @@ public class RegistryServerImplementation extends UnicastRemoteObject
     }
 
     /**
-     * TODO: comment
-     * @param spreadMessage
+     * New membership message is received
+     *
+     * @param spreadMessage the received message
      */
     public void membershipMessageReceived(SpreadMessage spreadMessage) {
         Util.printDebug("membershipMessageReceived");
-        /**
-         * TODO: Implement group join/leave here
-         */
-        /**
-         * TODO: Implement master server failover here
-         */
         MembershipInfo membershipInformation = spreadMessage.getMembershipInfo();
 
         SpreadGroup members[] = membershipInformation.getMembers();
         if (membershipInformation.isRegularMembership()) {
+            // member joined group
             if (membershipInformation.isCausedByJoin()) {
                 Util.printDebug("New member joined.   ".concat(membershipInformation.getJoined().toString()));
                 Util.printDebug("List of existing members.");
                 for (SpreadGroup g : members) {
                     Util.printDebug(g.toString());
                 }
-                this.electMaster(membershipInformation);
+                this.electMaster(membershipInformation);  // elect new master
+            // member left group because of one of the following reasons
             } else if (membershipInformation.isCausedByLeave()
                     || membershipInformation.isCausedByDisconnect()
                     || membershipInformation.isCausedByNetwork()) {
@@ -202,105 +193,22 @@ public class RegistryServerImplementation extends UnicastRemoteObject
                 for (SpreadGroup g : members) {
                     Util.printDebug(g.toString());
                 }
-                this.electMaster(membershipInformation);
+                this.electMaster(membershipInformation);  // elect new master
             }
+        // this member left group
         } else if (membershipInformation.isSelfLeave()) {
-            master = false;
-            synced = false;
+            master = false;   // this server is not master anymore and must
+            synced = false;   // be synced next time it connects to spread
             Util.printDebug("I'm out now.");
         }
-
-// <editor-fold defaultstate="collapsed" desc="unused">
-/*SpreadMessage msg = spreadMessage;
-        try {
-        System.out.println("*****************RECTHREAD Received Message************");
-        if (msg.isRegular()) {
-        System.out.print("Received a ");
-        if (msg.isUnreliable()) {
-        System.out.print("UNRELIABLE");
-        } else if (msg.isReliable()) {
-        System.out.print("RELIABLE");
-        } else if (msg.isFifo()) {
-        System.out.print("FIFO");
-        } else if (msg.isCausal()) {
-        System.out.print("CAUSAL");
-        } else if (msg.isAgreed()) {
-        System.out.print("AGREED");
-        } else if (msg.isSafe()) {
-        System.out.print("SAFE");
-        }
-        System.out.println(" message.");
-        
-        System.out.println("Sent by  " + msg.getSender() + ".");
-        
-        System.out.println("Type is " + msg.getType() + ".");
-        
-        if (msg.getEndianMismatch() == true) {
-        System.out.println("There is an endian mismatch.");
-        } else {
-        System.out.println("There is no endian mismatch.");
-        }
-        
-        SpreadGroup groups[] = msg.getGroups();
-        System.out.println("To " + groups.length + " groups.");
-        
-        byte data[] = msg.getData();
-        System.out.println("The data is " + data.length + " bytes.");
-        
-        System.out.println("The message is: " + new String(data));
-        } else if (msg.isMembership()) {
-        MembershipInfo info = msg.getMembershipInfo();
-        printMembershipInfo(info);
-        } else if (msg.isReject()) {
-        // Received a Reject message
-        System.out.print("Received a ");
-        if (msg.isUnreliable()) {
-        System.out.print("UNRELIABLE");
-        } else if (msg.isReliable()) {
-        System.out.print("RELIABLE");
-        } else if (msg.isFifo()) {
-        System.out.print("FIFO");
-        } else if (msg.isCausal()) {
-        System.out.print("CAUSAL");
-        } else if (msg.isAgreed()) {
-        System.out.print("AGREED");
-        } else if (msg.isSafe()) {
-        System.out.print("SAFE");
-        }
-        System.out.println(" REJECTED message.");
-        
-        System.out.println("Sent by  " + msg.getSender() + ".");
-        
-        System.out.println("Type is " + msg.getType() + ".");
-        
-        if (msg.getEndianMismatch() == true) {
-        System.out.println("There is an endian mismatch.");
-        } else {
-        System.out.println("There is no endian mismatch.");
-        }
-        
-        SpreadGroup groups[] = msg.getGroups();
-        System.out.println("To " + groups.length + " groups.");
-        
-        byte data[] = msg.getData();
-        System.out.println("The data is " + data.length + " bytes.");
-        
-        System.out.println("The message is: " + new String(data));
-        } else {
-        System.out.println("Message is of unknown type: " + msg.getServiceType());
-        }
-        } catch (Exception e) {
-        e.printStackTrace();
-        System.exit(1);
-        }*/// </editor-fold>
-
     }
 
     // </editor-fold>
     // <editor-fold defaultstate="collapsed" desc="Private Methods">
     /**
-     * TODO: comment
-     * @param group
+     * Election for new master
+     *
+     * @param membershipInformation the membership information of the server
      */
     private void electMaster(MembershipInfo membershipInformation) {
         SpreadGroup group[] = membershipInformation.getMembers();
@@ -339,7 +247,7 @@ public class RegistryServerImplementation extends UnicastRemoteObject
                     master = false;
                     synced = false;
                 } else {
-                    Util.printDebug(CONF_PRIVATESPREADGROUP.concat(": I'm nothing"));
+                    Util.printDebug(CONF_PRIVATESPREADGROUP.concat(": I'm a slave"));
                     master = false;
                     synced = false;
                 }
@@ -348,8 +256,10 @@ public class RegistryServerImplementation extends UnicastRemoteObject
     }
 
     /**
-     * TODO: comment
-     * @param info
+     * Prints useful information about the received message
+     * Only used for debugging
+     *
+     * @param info membership information
      */
     private void printMembershipInfo(MembershipInfo info) {
         SpreadGroup group = info.getGroup();
@@ -405,7 +315,7 @@ public class RegistryServerImplementation extends UnicastRemoteObject
         SpreadMessage spreadMessage = new SpreadMessage();
         spreadMessage.addGroup(SPREAD_SERVER_GROUP_NAME); // notwendig ?
         try {
-            currentGame.setMasterHost(CONF_REGISTRYSERVERHOSTNAME);
+            currentGame.setMasterHost(CONF_REGISTRYSERVERHOSTNAME); // add hostname and port so a slave can tell a client where the master can be found
             currentGame.setMasterPort(Integer.parseInt(CONF_REGISTRYSERVERPORT));
             spreadMessage.setObject(currentGame);
             spreadMessage.setReliable();
@@ -416,6 +326,9 @@ public class RegistryServerImplementation extends UnicastRemoteObject
         }
     }
 
+    /**
+     * Sends the address and port of the new master to all clients.
+     */
     private void reportMeAsNewMaster() {
         for (PlayerAdapter player : currentGame.getPlayers()) {
             IClient clientstub = player.getClientstub();
