@@ -1,15 +1,31 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+/**
+ * FH Technikum-Wien,
+ * BICSS - Sommersemester 2011
+ *
+ * Softwarearchitekturen und Middlewaretechnologien
+ * Alcatraz - Remote - Projekt
+ * Gruppe B2
+ *
+ *
+ * @author Christian Fossati
+ * @author Stefan Schramek
+ * @author Michael Strobl
+ * @author Sebastian Vogel
+ * @author Juergen Zornig
+ *
+ *
+ * @date 2011/03/10
+ *
+ **/
+
 package at.technikum.sam.remote.alcatraz.commons;
 
 import at.falb.games.alcatraz.api.Player;
 import at.falb.games.alcatraz.api.Prisoner;
 
 /**
- *
- * @author Sebastian_2
+ * Move.java
+ * class to wrap the Alcatraz move in one structure
  */
 public class Move {
     private Player player;
@@ -18,6 +34,15 @@ public class Move {
     private int row;
     private int col;
     
+    /**
+     * creates a new Move object
+     * 
+     * @param player 
+     * @param prsnr
+     * @param rowOrCol
+     * @param row
+     * @param col 
+     */
     public Move(Player player, Prisoner prsnr, int rowOrCol, int row, int col) {
         this.player = player;
         this.prsnr = prsnr;

@@ -1,27 +1,59 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+/**
+ * FH Technikum-Wien,
+ * BICSS - Sommersemester 2011
+ *
+ * Softwarearchitekturen und Middlewaretechnologien
+ * Alcatraz - Remote - Projekt
+ * Gruppe B2
+ *
+ *
+ * @author Christian Fossati
+ * @author Stefan Schramek
+ * @author Michael Strobl
+ * @author Sebastian Vogel
+ * @author Juergen Zornig
+ *
+ *
+ * @date 2011/03/10
+ *
+ **/
+
 package at.technikum.sam.remote.alcatraz.client;
 
 import at.technikum.sam.remote.alcatraz.commons.Constants;
 import at.technikum.sam.remote.alcatraz.commons.Move;
 import at.technikum.sam.remote.alcatraz.commons.PlayerAdapter;
 import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- *
- * @author Sebastian_2
+ * DistributeMoveThread.java
+ * 
+ * is the  thread which is responsible for the distribution of a move
+ * to all the other clients
+ * 
  */
 public class DistributeMoveThread extends Thread {
 
     private ClientImplementation client;
     private Move move;
+    
+    /**
+     * Constructor
+     * 
+     * @param client the calling client
+     * @param move the move that needs to be distributed
+     */
 
     public DistributeMoveThread(ClientImplementation client, Move move) {
         this.client = client;
         this.move = move;
     }
+    
+    /**
+     * starts the distribution
+     */
 
     @Override
     public void run() {
@@ -67,12 +99,11 @@ public class DistributeMoveThread extends Thread {
                         }
                     }
                     count++;
-                    Thread.sleep(Constants.TIMEOUT);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+      
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    Logger.getLogger(DistributeMoveThread.class.getName()).log(Level.INFO, null, ex);
                 }
+                Logger.getLogger(DistributeMoveThread.class.getName()).log(Level.FINE, null, ex);
                 success = false;
             }
         }

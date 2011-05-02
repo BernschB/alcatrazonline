@@ -24,6 +24,7 @@ package at.technikum.sam.remote.alcatraz.commons;
  * @author pinkerl
  */
 public interface Constants {
+    
     /**
      * Maximum Number of players allowed in a game
      */
@@ -95,7 +96,7 @@ public interface Constants {
      * Error Message displayed to the user if server could not be reached
      */
     public final static String ERR_SERVERNOTREACHED
-            = "Error: could noit reach server";
+            = "Error: could not reach server";
     
      /**
      * Error Message displayed to the user if an error occurs
@@ -108,4 +109,5 @@ public interface Constants {
      */
     public final static String ERR_NOTENOUGHPLAYER
             = "Error: not enough player registered with server";
+    
 }

@@ -34,14 +34,15 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
- *
- * TODO: Comment
+ * ClientImplementation.java
+ * contains the main part of the business logic on the client side
+ * 
  */
 public class ClientImplementation implements IClient, MoveListener {
     
@@ -59,6 +60,16 @@ public class ClientImplementation implements IClient, MoveListener {
         super();
     }
     
+    /**
+     * has to be called before all other methods!
+     * 
+     * @param host hostname of the server
+     * @param port portnumber of the server
+     * @param myPlayer my PlayerAdapter
+     * @throws RemoteException
+     * @throws NotBoundException
+     * @throws MalformedURLException 
+     */
     public void init(String host, int port, PlayerAdapter myPlayer)
             throws RemoteException, NotBoundException, MalformedURLException {
         this.masterServerUrl = host;
@@ -72,10 +83,11 @@ public class ClientImplementation implements IClient, MoveListener {
 
     //<editor-fold defaultstate="collapsed" desc="IClient Implementation">
     /**
-     * TODO: comment
+     * Implementation of the IClient method
      *
-     * @param host
-     * @param port
+     * @param host hostname of the new server
+     * @param port portnumber of the new server
+     * @return true if reportNewMaster succeeds
      * @throws RemoteException
      */
     public boolean reportNewMaster(String host, int port) throws RemoteException {
@@ -85,17 +97,16 @@ public class ClientImplementation implements IClient, MoveListener {
             try {
                 this.lookupMaster();
             } catch (Exception ex) {
-                //TODO: Error Handling
-                ex.printStackTrace();
+               Logger.getLogger(ClientImplementation.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         return true;
     }
 
     /**
-     * TODO: comment
+     * Implementation of the ICLient isAlive() method
      *
-     * @return
+     * @return true if IClient is alive
      * @throws RemoteException
      */
     public boolean isAlive() throws RemoteException {
@@ -103,9 +114,12 @@ public class ClientImplementation implements IClient, MoveListener {
         return true;
     }
 
-    /*
-     * TODO: DEBUG - remote-method used only or debug purposes remove when finished
-     * When needed replace whith calls to isAlive() before deploying
+    /**
+     * Implementation of the IClient debugIsAlive() method
+     * 
+     * @return true if IClient is alive
+     * @param callerName name of the Caller
+     * @throws RemoteException
      */
     public boolean debugIsAlive(String callerName)
             throws RemoteException {
@@ -114,10 +128,11 @@ public class ClientImplementation implements IClient, MoveListener {
     }
 
     /**
-     * TODO: comment
+     * Implementation of the IClient startGame() method
      *
-     * @param players
-     * @return
+     * 
+     * @param players list of all the players registered with the server
+     * @return true if successfully finished
      * @throws GameStartException
      * @throws RemoteException
      */
@@ -130,7 +145,7 @@ public class ClientImplementation implements IClient, MoveListener {
             try {
                 player.getClientstub().debugIsAlive(this.myPlayer.getName());
             } catch (Exception ex) {
-                ex.printStackTrace();
+                Logger.getLogger(ClientImplementation.class.getName()).log(Level.SEVERE, null, ex);
                 throw new RemoteException();
             }
         }
@@ -166,16 +181,15 @@ public class ClientImplementation implements IClient, MoveListener {
             this.game.getPlayer(i).setName(player.getName());
             i++;
         }
-        //TODO: Remove debug
-        while (i > 0) {
-            i--;
-            Util.printDebug("Player with id ".concat(String.valueOf(i)).
-                    concat(" has the name: ").
-                    concat(this.game.getPlayer(i).getName()));
+        if(Util.DEBUG) {
+            while (i > 0) {
+                i--;
+                Util.printDebug("Player with id ".concat(String.valueOf(i)).
+                        concat(" has the name: ").
+                        concat(this.game.getPlayer(i).getName()));
+            }
         }
-        
-        
-        
+            
         this.game.addMoveListener(this);
         this.game.start();
         
@@ -184,6 +198,17 @@ public class ClientImplementation implements IClient, MoveListener {
         return true;
     }
     
+    /**
+     * Implementation of the IClient doMove() method
+     * 
+     * @param player the player which moved
+     * @param prisoner the prisoner which was moved
+     * @param rowOrCol 
+     * @param row
+     * @param col
+     * @return true if successfully finished
+     * @throws RemoteException 
+     */
     public boolean doMove(Player player, Prisoner prisoner, int rowOrCol, int row, int col)
             throws RemoteException {
         this.game.doMove(
@@ -195,27 +220,62 @@ public class ClientImplementation implements IClient, MoveListener {
         return true;
     }
     
+    /**
+     * Implementation of the IClient playerAbsent() method
+     * 
+     * @param player the player who is absent
+     * @throws RemoteException 
+     */
     public void playerAbsent(PlayerAdapter player) throws RemoteException {
         this.listener.playerAbsent(player.getName());
     }
    
     // </editor-fold>
+    
     // <editor-fold defaultstate="collapsed" desc="Public Methods">
+    /**
+     * Returns the Server on which the client can perform the registration process
+     * 
+     * @return a IRegisterServer implementation
+     */
     public IRegistryServer getMasterServer() {
         return this.masterServer;
     }
     
+    /**
+     * Method to install a Listener for certain Client events
+     * 
+     * @param listener the ClientListener implementation 
+     */
     public void installListener(ClientListener listener) {
         this.listener = listener;
     }
+    
+    /**
+     * returns the PlayerAdapter of my player
+     * 
+     * @return my PlayerAdapter 
+     */
 
     public PlayerAdapter getMyPlayer() {
         return myPlayer;
     }
+    
+    /**
+     * returns the PlayerAdapter of the next player
+     * 
+     * @return the next PlayerAdapter
+     */
 
     public PlayerAdapter getNextPlayer() {
         return nextPlayer;
     }
+    
+    /**
+     * returns a list of all players registered with this game
+     * 
+     * @return a list of PlayerAdapter 
+     */
 
     public List<PlayerAdapter> getThePlayers() {
         return thePlayers;
@@ -247,6 +307,15 @@ public class ClientImplementation implements IClient, MoveListener {
     // </editor-fold>
 
     // <editor-fold defaultstate="collapsed" desc="MoveListener Methods">
+    /**
+     * Implementation of the Alcatraz-Game MoveListener moveDone() method
+     * 
+     * @param player
+     * @param prsnr
+     * @param i
+     * @param i1
+     * @param i2 
+     */
     public void moveDone(Player player, Prisoner prsnr, int i, int i1, int i2) {
         
         Move move = new Move(player, prsnr, i, i1, i2);
@@ -255,6 +324,11 @@ public class ClientImplementation implements IClient, MoveListener {
         
     }
     
+    /**
+     * Implementation of the Alcatraz-Game MoveListener moveDone() method
+     * 
+     * @param player 
+     */
     public void gameWon(Player player) {
         listener.gameWon(player);
     }

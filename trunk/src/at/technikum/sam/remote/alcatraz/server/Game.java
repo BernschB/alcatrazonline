@@ -69,7 +69,6 @@ public class Game implements Serializable, Constants {
      * Adds an Player to the list of players for a new game.
      *
      * @param player The player which should be added
-     * @return true if player is added, false if player already was registered
      * @throws GameRegistryException if a maximum number of players is reached
      * @throws NameAlreadyInUseException if a players name equals another players name
      */
