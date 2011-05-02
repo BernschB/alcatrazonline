@@ -1,10 +1,25 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
+/**
+ * FH Technikum-Wien,
+ * BICSS - Sommersemester 2011
+ *
+ * Softwarearchitekturen und Middlewaretechnologien
+ * Alcatraz - Remote - Projekt
+ * Gruppe B2
+ *
+ *
+ * @author Christian Fossati
+ * @author Stefan Schramek
+ * @author Michael Strobl
+ * @author Sebastian Vogel
+ * @author Juergen Zornig
+ *
+ *
+ * @date 2011/03/10
+ *
+ **/
 
 /*
- * GameUi.java
+ * GameGUI.java
  *
  * Created on 27.04.2011, 17:40:10
  */
@@ -12,7 +27,6 @@ package at.technikum.sam.remote.alcatraz.client;
 
 import at.falb.games.alcatraz.api.Alcatraz;
 import at.falb.games.alcatraz.api.Player;
-import at.technikum.sam.remote.alcatraz.commons.ClientAlreadyRegisteredException;
 import at.technikum.sam.remote.alcatraz.commons.Constants;
 import at.technikum.sam.remote.alcatraz.commons.GameRegistryException;
 import at.technikum.sam.remote.alcatraz.commons.GameStartException;
@@ -20,18 +34,18 @@ import at.technikum.sam.remote.alcatraz.commons.IClient;
 import at.technikum.sam.remote.alcatraz.commons.NameAlreadyInUseException;
 import at.technikum.sam.remote.alcatraz.commons.NotMasterException;
 import at.technikum.sam.remote.alcatraz.commons.PlayerAdapter;
-import at.technikum.sam.remote.alcatraz.commons.Util;
-import java.awt.BorderLayout;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 /**
- *
- * @author Sebastian_2
+ * GameGUI.jave
+ * 
+ * contains all the elements of the user interface which is used on the client
+ * side to the register and unregister with the server and to force start a game
+ * 
  */
 public class GameGUI extends javax.swing.JFrame implements Constants, ClientListener {
 
@@ -39,7 +53,7 @@ public class GameGUI extends javax.swing.JFrame implements Constants, ClientList
     private static PlayerAdapter myPlayer = null;
     private static Alcatraz theGame = null;
 
-    /** Creates new form GameUi */
+    /** Creates new form GameGUI */
     public GameGUI() {
         initComponents();
         tfServerHostName.setText(CONF_REGISTRYSERVERHOSTNAME);
@@ -210,19 +224,22 @@ public class GameGUI extends javax.swing.JFrame implements Constants, ClientList
         }
 
         myClient = new ClientImplementation();
-
+        
+        // when the call to this method fails something is very wrong
         try {
             clientStub = (IClient) UnicastRemoteObject.exportObject(myClient, 0);
         } catch (RemoteException ex) {
-            ex.printStackTrace();
+            Logger.getLogger(GameGUI.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(-1);
         } catch (Exception ex) {
-            ex.printStackTrace();
+            Logger.getLogger(GameGUI.class.getName()).log(Level.SEVERE, null, ex);
             System.exit(-1);
         }
-
+        
+        // makes no sense to go on without a client stub
         if (clientStub == null) {
-            Util.printDebug("ClientStub is null");
+            Logger.getLogger(GameGUI.class.getName()).
+                    log(Level.SEVERE, "ClientStub is null");
             System.exit(-1);
         }
 
@@ -234,11 +251,24 @@ public class GameGUI extends javax.swing.JFrame implements Constants, ClientList
             myClient.installListener(this);
 
         } catch (Exception ex) {
-            //TODO: ExceptionHandling
-            ex.printStackTrace();
+            Logger.getLogger(GameGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
-
-        registerPlayer();
+        
+        try {
+            registerPlayer();
+        } catch (NameAlreadyInUseException ex) {
+            Logger.getLogger(GameGUI.class.getName()).log(Level.FINE, null, ex);
+            lbRegisterFormError.setText(ERR_NAMEINUSE);
+            return;
+        } catch (RemoteException ex) {
+            Logger.getLogger(GameGUI.class.getName()).log(Level.INFO, null, ex);
+            lbRegisterFormError.setText(ERR_SERVERNOTREACHED);
+            return;
+        } catch (Exception ex) {
+           Logger.getLogger(GameGUI.class.getName()).log(Level.WARNING, null, ex);
+           lbRegisterFormError.setText(ERR_ERROR);
+            return; 
+        }
         
         lbRegisterFormError.setText("");
         lbRegisterInfo.setText(
@@ -280,6 +310,8 @@ public class GameGUI extends javax.swing.JFrame implements Constants, ClientList
     }//GEN-LAST:event_btForceStartActionPerformed
 
     /**
+     * the main starting point for the client
+     * 
      * @param args the command line arguments
      */
     public static void main(String args[]) {
@@ -307,13 +339,23 @@ public class GameGUI extends javax.swing.JFrame implements Constants, ClientList
     private javax.swing.JTextField tfServerPort;
     // End of variables declaration//GEN-END:variables
 
+    /**
+     * Implementation of the ClientListener gameStarted() method
+     * 
+     * @param game 
+     */
     public void gameStarted(Alcatraz game) {
         theGame = game;
         this.setVisible(false);
         theGame.showWindow();
 
     }
-
+    
+    /**
+     * Implementation of the ClientListener gameWon() method
+     * 
+     * @param player 
+     */
     public void gameWon(Player player) {
         int option = JOptionPane.showConfirmDialog(
                 theGame.getWindow(),
@@ -333,7 +375,12 @@ public class GameGUI extends javax.swing.JFrame implements Constants, ClientList
 
         }
     }
-
+    
+    /**
+     * Implementation of the ClientListener playerAbsent() method
+     * 
+     * @param name 
+     */
     public void playerAbsent(String name) {
 
         JOptionPane.showMessageDialog(
@@ -342,31 +389,28 @@ public class GameGUI extends javax.swing.JFrame implements Constants, ClientList
                 concat(" is absent!"),
                 "Player absent",
                 JOptionPane.WARNING_MESSAGE);
+        Logger.getLogger(GameGUI.class.getName()).
+                log(Level.INFO,  "Player ".concat(name).concat(" is absent!"));
 
     }
 
-    private void registerPlayer() {
+    private void registerPlayer() throws Exception {
         try {
             myClient.getMasterServer().register(myPlayer);
-        } catch (NameAlreadyInUseException ex) {
-            lbRegisterFormError.setText(ERR_NAMEINUSE);
-            return;
-        } catch (ClientAlreadyRegisteredException ex) {
-            lbRegisterFormError.setText(ERR_ERROR);
-            return;
-        } catch (GameRegistryException ex) {
-            lbRegisterFormError.setText(ERR_ERROR);
-            return;
-        } catch (RemoteException ex) {
-            lbRegisterFormError.setText(ERR_SERVERNOTREACHED);
-            return;
         } catch (NotMasterException ex) {
+            Logger.getLogger(ClientImplementation.class.getName()).log(Level.FINE, null, ex);
             try {
                 myClient.reportNewMaster(ex.getHost(), ex.getPort());
             } catch (RemoteException ex1) {
-                Util.printDebug(ex1.getMessage());
+                throw ex1;
             }
-            registerPlayer();
+            try { 
+                registerPlayer();
+            } catch (Exception ex2) {
+                throw ex2;
+            }
+        } catch (Exception ex) {
+            throw ex;
         }
 
     }

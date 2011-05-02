@@ -33,7 +33,7 @@ import java.util.logging.Logger;
 */
 public final class Util implements Constants {
 
-    private final static boolean DEBUG = true;
+    public final static boolean DEBUG = true;
     private static Properties properties = null;
 
     private static int sequencer = -1;
