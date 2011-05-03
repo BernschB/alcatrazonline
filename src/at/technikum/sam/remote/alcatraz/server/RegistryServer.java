@@ -37,7 +37,7 @@ import spread.SpreadMessage;
 
 /**
  *
- * TODO: comment
+ * Register RMI and spread server
  */
 public class RegistryServer implements Constants {
 
@@ -130,21 +130,5 @@ public class RegistryServer implements Constants {
 
   public static SpreadConnection getSpreadConnection() {
     return connection;
-  }
-
-  /**
-   * TODO: Spread Startup Method... Work in Progress
-   */
-  private void startSpread() {
-    ProcessBuilder spreadDaemon = new ProcessBuilder("spread -c spread.conf -n host1");
-
-    spreadDaemon.directory(new File(System.getProperty("user.dir").toString()));
-    Util.printDebug(System.getProperty("user.dir"));
-    try {
-      spreadDaemon.start();
-    } catch (IOException ex) {
-      Logger.getLogger(RegistryServer.class.getName()).log(Level.SEVERE, null, ex);
-      Util.printDebug(ex.toString());
-    }
   }
 }

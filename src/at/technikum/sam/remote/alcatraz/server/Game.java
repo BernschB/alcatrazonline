@@ -31,15 +31,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/* TODO: check if synchronizing Singletons is possible ???
-        Answer: No, its at least not recommended */
 /**
  * Helper class for managing player lists and number of players and synchronize
  * them over spread.
  */
 public class Game implements Serializable, Constants {
 
-    //TODO: Vector is an obsolete Collection according to api-docu it should not be used
     private List<PlayerAdapter> players;
     private static int sequencer = -1;
     private String masterHost="";
@@ -48,19 +45,6 @@ public class Game implements Serializable, Constants {
      * Constructor of GameRegistry
      */
     public Game() {
-        /*
-         * Init Vector with size of MAXPLAYERS,
-         * so that no resizing has to be performed.
-         * 
-         * TODO:
-         * Do we really need thread-safe Lists here?
-         * Thread-Safe list are only needed when  "one of the threads
-         * modifies the list >>structurally<<, (A structural modification is any
-         * operation that adds or deletes one or more elements, or explicitly
-         * resizes the backing array; merely >>>setting the value<<< of an
-         * element is >>>not<<< a structural modification.)"
-         * see also: http://download.oracle.com/javase/6/docs/api/java/util/ArrayList.html
-         */
         this.players = Collections.synchronizedList(new ArrayList<PlayerAdapter>(MAXPLAYERS));
         
     }
@@ -146,7 +130,8 @@ public class Game implements Serializable, Constants {
     }
 
     /**
-     * TODO: comment
+     * Starts the game
+     *
      * @throws GameStartException
      * @throws RemoteException
      */

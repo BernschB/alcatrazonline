@@ -24,15 +24,9 @@ import java.rmi.RemoteException;
 
 /**
  *
- * TODO: Comment
+ * Registry server interface
  */
 public interface IRegistryServer extends Remote {
-
-    /*
-     * TODO: könnten wir da nicht gleich dem Server einen ClientStub mitgeben?
-     * Dann würden wir uns das lookup (serverseitig) sparen und eventuell auch
-     * die register Methode...
-     */
 
     void register(PlayerAdapter player)
             throws NameAlreadyInUseException, ClientAlreadyRegisteredException, GameRegistryException, RemoteException, NotMasterException;
