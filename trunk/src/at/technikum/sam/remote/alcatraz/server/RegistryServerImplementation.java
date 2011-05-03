@@ -41,8 +41,7 @@ import spread.SpreadGroup;
 import spread.SpreadMessage;
 
 /**
- *
- * TODO: Comment
+ * Methods for registry server
  */
 public class RegistryServerImplementation extends UnicastRemoteObject
         implements IRegistryServer, AdvancedMessageListener,
@@ -53,7 +52,7 @@ public class RegistryServerImplementation extends UnicastRemoteObject
     private static boolean synced = false;    // I received a sync message?
 
     /**
-     * TODO: comment
+     * 
      * @throws RemoteException
      */
     public RegistryServerImplementation() throws RemoteException {
@@ -117,7 +116,8 @@ public class RegistryServerImplementation extends UnicastRemoteObject
     }
 
     /**
-     * TODO: comment
+     * Client forces game start
+     *
      * @param player
      * @throws GameStartException
      * @throws RemoteException
