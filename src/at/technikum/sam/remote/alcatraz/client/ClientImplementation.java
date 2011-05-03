@@ -172,7 +172,9 @@ public class ClientImplementation implements IClient, MoveListener {
         
         
         if (!myClientFoundFlag) {
-            throw new GameStartException();
+            throw new GameStartException("Player ".
+                    concat(myPlayer.getName()).
+                    concat(" says: myPlayer is not in the PlayerList"));
         }
         
         int i = 0;

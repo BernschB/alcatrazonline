@@ -21,9 +21,15 @@
 package at.technikum.sam.remote.alcatraz.commons;
 
 /**
- *
- * TODO: Comment
+ * Exception that indicates that the start of the Game has failed
  */
 public class GameStartException extends Exception {
+    /**
+     * Constructor
+     * @param message 
+     */
+    public GameStartException(String message) {
+        super(message);
+    }
 
 }

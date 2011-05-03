@@ -29,6 +29,11 @@ public interface Constants {
      * Maximum Number of players allowed in a game
      */
     public final static int MAXPLAYERS = 4;
+    
+     /**
+     * Minimum Number of players allowed in a game
+     */
+    public final static int MINPLAYERS = 2;
 
     /**
      * Timeout to wait between retries if move propagation fails
