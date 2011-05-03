@@ -124,12 +124,9 @@ public class RegistryServerImplementation extends UnicastRemoteObject
      */
     public void forceStart(PlayerAdapter player)
             throws GameStartException, RemoteException {
-        if (currentGame.getNumberOfPlayers() > 1) {
-            currentGame.startGame();
-            this.synchronizeGame();
-        } else {
-            throw new GameStartException();
-        }
+    
+        currentGame.startGame();
+        this.synchronizeGame();
     }
     // </editor-fold>
 

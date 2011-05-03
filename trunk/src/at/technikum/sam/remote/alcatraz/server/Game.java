@@ -30,6 +30,8 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Helper class for managing player lists and number of players and synchronize
@@ -39,14 +41,15 @@ public class Game implements Serializable, Constants {
 
     private List<PlayerAdapter> players;
     private static int sequencer = -1;
-    private String masterHost="";
-    private int masterPort=0;
+    private String masterHost = "";
+    private int masterPort = 0;
+
     /**
      * Constructor of GameRegistry
      */
     public Game() {
         this.players = Collections.synchronizedList(new ArrayList<PlayerAdapter>(MAXPLAYERS));
-        
+
     }
 
     /**
@@ -59,22 +62,20 @@ public class Game implements Serializable, Constants {
     public void addPlayer(PlayerAdapter player)
             throws GameRegistryException, NameAlreadyInUseException, ClientAlreadyRegisteredException, RemoteException {
 
-        if(player == null) {
+        if (player == null) {
             throw new NullPointerException();
         }
-        
-        if(players.size() >= MAXPLAYERS) {
-            throw new GameRegistryException("A maximum number of players of "
-                    .concat(String.valueOf(MAXPLAYERS))
-                    .concat(" is already reached!"));
+
+        if (players.size() >= MAXPLAYERS) {
+            throw new GameRegistryException("A maximum number of players of ".concat(String.valueOf(MAXPLAYERS)).concat(" is already reached!"));
         }
 
-        for(PlayerAdapter temp : players) {
-            if(temp.getName().equals(player.getName())) {
+        for (PlayerAdapter temp : players) {
+            if (temp.getName().equals(player.getName())) {
                 throw new NameAlreadyInUseException();
             }
-            if(temp.getClientstub().equals(player.getClientstub())) {
-                
+            if (temp.getClientstub().equals(player.getClientstub())) {
+
                 throw new ClientAlreadyRegisteredException();
             }
         }
@@ -90,7 +91,6 @@ public class Game implements Serializable, Constants {
     public boolean removePlayer(PlayerAdapter player) {
         return players.remove(player);
     }
-
 
     /**
      * Returns the current number of registerd players
@@ -133,17 +133,22 @@ public class Game implements Serializable, Constants {
      * Starts the game
      *
      * @throws GameStartException
-     * @throws RemoteException
      */
-    public void startGame() throws GameStartException, RemoteException {
+    public void startGame() throws GameStartException {
         
+        if (this.getPlayers().size() < MINPLAYERS) {
+            throw new GameStartException("Not enough player registered");
+        }
+
         List<PlayerAdapter> playerList = this.getPlayers();
 
-        for(PlayerAdapter player : this.getPlayers()) {
-            player.getClientstub().debugIsAlive("Server startGame()");
-            /* start Game on client implementation */
-            player.getClientstub().startGame(playerList);
-
+        for (PlayerAdapter player : this.getPlayers()) {
+            try {
+                player.getClientstub().startGame(playerList);
+            } catch (RemoteException ex) {
+               // leave the handling of absent players to the clients
+                Logger.getLogger(Game.class.getName()).log(Level.INFO, null, ex);
+            }
         }
 
         this.Reset();
@@ -162,7 +167,7 @@ public class Game implements Serializable, Constants {
         sb.append(this.getNumberOfPlayers());
         sb.append(" players registered:\n");
 
-        for(PlayerAdapter player : this.players) {
+        for (PlayerAdapter player : this.players) {
             sb.append("  ");
             sb.append(player.getName());
             sb.append("\n");
