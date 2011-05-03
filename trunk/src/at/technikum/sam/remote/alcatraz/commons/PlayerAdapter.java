@@ -24,7 +24,7 @@ import java.io.Serializable;
 
 /**
  *
- * TODO: Comment
+ * PlayerAdapter associates a client stub with its players name
  */
 public class PlayerAdapter implements Serializable{
 
