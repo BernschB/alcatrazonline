@@ -68,8 +68,8 @@ public class RegistryServerImplementation extends UnicastRemoteObject
      *
      * @throws NameAlreadyInUseException if the given is already used
      * @throws ClientAlreadyRegisteredException if the given client-stub is already registered
-     * @throws GameRegistryException when something went wrong while registration TODO
-     * @throws RemoteException when ??? uhm...yeah when actually ??? TODO
+     * @throws GameRegistryException when something went wrong while registration
+     * @throws RemoteException when RMI times out
      */
     public void register(PlayerAdapter player)
             throws NameAlreadyInUseException, ClientAlreadyRegisteredException, GameRegistryException, RemoteException, NotMasterException {
@@ -106,8 +106,8 @@ public class RegistryServerImplementation extends UnicastRemoteObject
      * Removes a given player from the current game
      *
      * @param player a PlayerAdapter object identifying a player and its client
-     * @throws GameRegistryException when ??? uhm...yeah when actually ??? TODO
-     * @throws RemoteException when ??? uhm...yeah when actually ??? TODO
+     * @throws GameRegistryException when something went wrong with unregistering
+     * @throws RemoteException when RMI times out
      */
     public void unregister(PlayerAdapter player)
             throws GameRegistryException, RemoteException {
