@@ -22,15 +22,12 @@ package at.technikum.sam.remote.alcatraz.commons;
 
 /**
  *
- * TODO: Comment
+ * Exception that indicates thst something went wrong
+ * while game registration.
  */
 public class GameRegistryException extends Exception {
 
     public GameRegistryException(String message) {
-        super();
-
-        /**
-         * TODO: Fill Message in Exception 
-         */
+        super(message);
     }
 }
