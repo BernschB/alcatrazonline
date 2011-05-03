@@ -22,7 +22,8 @@ package at.technikum.sam.remote.alcatraz.commons;
 
 /**
  *
- * TODO: Comment
+ * Exception that indicates, that a player with the same
+ * name has already registered
  */
 public class NameAlreadyInUseException extends Exception {
 
