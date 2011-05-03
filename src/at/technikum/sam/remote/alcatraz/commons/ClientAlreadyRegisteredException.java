@@ -22,7 +22,7 @@ package at.technikum.sam.remote.alcatraz.commons;
 
 /**
  *
- * TODO: Comment
+ * Exception that indicates that a client stub is already registered
  */
 public class ClientAlreadyRegisteredException extends Exception {
 
